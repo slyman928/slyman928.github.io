@@ -5,7 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Science & Tech News Digest</title>
     <style>
-        /* ...existing CSS... */
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            margin: 0; padding: 40px; background: linear-gradient(135deg, #f6faff 0%, #e0f2fe 100%);
+            line-height: 1.6;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 3em; }
+        .header h1 { color: #1e40af; margin-bottom: 0.5em; }
+        .timestamp { color: #6b7280; font-size: 0.9em; }
+        .article { 
+            margin-bottom: 2em; padding: 2em; border-radius: 16px; 
+            background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 4px solid #3b82f6;
+            transition: transform 0.2s ease;
+        }
+        .article:hover { transform: translateY(-2px); }
+        .title { 
+            font-size: 1.3em; font-weight: 600; margin-bottom: 0.8em; 
+            line-height: 1.4;
+        }
+        .title a { color: #1e40af; text-decoration: none; }
+        .title a:hover { text-decoration: underline; }
+        .article-image {
+            margin: 1em 0;
+            text-align: center;
+        }
+        .article-image img {
+            max-width: 100%;
+            height: auto;
+            max-height: 300px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .summary { 
+            color: #374151; font-size: 1.05em; 
+            background: #f8fafc; padding: 1em; border-radius: 8px;
+            border-left: 3px solid #e5e7eb;
+        }
+        .published { 
+            color: #6b7280; font-size: 0.85em; margin-top: 0.5em;
+            font-style: italic;
+        }
+        .footer { 
+            text-align: center; margin-top: 3em; padding-top: 2em;
+            border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 0.9em;
+        }
         .category-section { margin-bottom: 3em; }
         .category-title { 
             font-size: 1.5em; color: #1e40af; margin-bottom: 1em; 
@@ -22,7 +67,7 @@
 <div class="container">
     <div class="header">
         <h1>🔬 Science & Tech News Digest</h1>
-        <div class="timestamp">Generated on 2025-06-09 17:15:00</div>
+        <div class="timestamp">Generated on 2025-06-09 18:19:33</div>
         <div class="stats">
             69 articles from 9 sources
         </div>
@@ -36,6 +81,9 @@
         <a href="https://news.mit.edu/2025/universal-nanosensor-unlocks-plant-growth-secrets-0609" target="_blank">Universal nanosensor unlocks the secrets to plant growth</a>
         <span class="source-tag">mit_news</span>
     </div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202505/smart-distap.jpg?itok=aOnFgEyr" alt="Universal nanosensor unlocks the secrets to plant growth" loading="lazy">
+    </div>
     <div class="summary">Researchers from SMART DiSTAP developed a near-infrared fluorescent nanosensor that can monitor the primary plant growth hormone, indole-3-acetic acid, in real-time without harming the plant.</div>
     <div class="published">Published: June 09, 2025</div>
 </div>
@@ -43,6 +91,9 @@
     <div class="title">
         <a href="https://news.mit.edu/2025/ai-enabled-control-system-helps-autonomous-drones-uncertain-environments-0609" target="_blank">AI-enabled control system helps autonomous drones stay on target in uncertain environments</a>
         <span class="source-tag">mit_news</span>
+    </div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202506/MIT_MetaLearning-01.jpg?itok=W4xrH8QL" alt="AI-enabled control system helps autonomous drones stay on target in uncertain environments" loading="lazy">
     </div>
     <div class="summary">MIT researchers created a machine learning-based adaptive control algorithm that enables autonomous drones to adjust their flight paths in response to unpredictable disturbances like gusting winds.</div>
     <div class="published">Published: June 09, 2025</div>
@@ -52,6 +103,9 @@
         <a href="https://news.mit.edu/2025/envisioning-future-where-health-care-tech-leaves-some-behind-0609" target="_blank">Envisioning a future where health care tech leaves some behind</a>
         <span class="source-tag">mit_news</span>
     </div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202505/mit-SERC-prize.jpg?itok=GRUdkC44" alt="Envisioning a future where health care tech leaves some behind" loading="lazy">
+    </div>
     <div class="summary">The winning essay of the Envisioning the Future of Computing Prize highlights the potential for AI-driven health care technologies to exacerbate existing health care disparities.</div>
     <div class="published">Published: June 09, 2025</div>
 </div>
@@ -59,6 +113,9 @@
     <div class="title">
         <a href="https://news.mit.edu/2025/coactive-helps-machines-understand-visual-content-ai-0609" target="_blank">Helping machines understand visual content with AI</a>
         <span class="source-tag">mit_news</span>
+    </div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202506/MIT-Coactive-AI-01-press.jpg?itok=YBc2evUx" alt="Helping machines understand visual content with AI" loading="lazy">
     </div>
     <div class="summary">Coactive, founded by MIT alumni, has developed an AI-powered platform designed to extract new insights from various types of content, including video.</div>
     <div class="published">Published: June 09, 2025</div>
@@ -68,6 +125,9 @@
         <a href="https://news.mit.edu/2025/how-brain-distinguishes-between-ambiguous-hypotheses-0606" target="_blank">How the brain distinguishes between ambiguous hypotheses</a>
         <span class="source-tag">mit_news</span>
     </div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202506/MIT-Ambig-Land-01-press.jpg?itok=x55_oH3t" alt="How the brain distinguishes between ambiguous hypotheses" loading="lazy">
+    </div>
     <div class="summary">New research indicates that a specific brain region involved in navigation uses distinct neural activity patterns to encode competing hypotheses about ambiguous landmarks.</div>
     <div class="published">Published: June 06, 2025</div>
 </div>
@@ -76,15 +136,50 @@
         <a href="https://news.mit.edu/2025/animation-technique-simulates-squishy-objects-motion-0606" target="_blank">Animation technique simulates the motion of squishy objects</a>
         <span class="source-tag">mit_news</span>
     </div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202506/MIT-Squishy-01-press.jpg?itok=PyO6YnWa" alt="Animation technique simulates the motion of squishy objects" loading="lazy">
+    </div>
     <div class="summary">MIT researchers developed a new animation technique that allows for more stable and realistic simulations of elastic objects, benefiting both animators and engineers.</div>
     <div class="published">Published: June 06, 2025</div>
+</div>
+<div class="article">
+    <div class="title">
+        <a href="https://www.theverge.com/news/683846/macos-tahoe-intel-x86-arm-m-cpu" target="_blank">Apple&#8217;s big updates for Intel-based Macs will end with Tahoe</a>
+        <span class="source-tag">the_verge</span>
+    </div>
+    <div class="summary">Apple will cease major software updates for Intel-based Macs after the release of macOS Tahoe this fall.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article">
+    <div class="title">
+        <a href="https://www.theverge.com/news/683818/microsoft-windows-11-new-start-menu-testing-dev-channel" target="_blank">You can now try Microsoft’s new Start menu for Windows 11</a>
+        <span class="source-tag">the_verge</span>
+    </div>
+    <div class="summary">Microsoft has released a new, larger, and more customizable Start menu for Windows 11 testers, featuring a scrollable interface and two new views.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article">
+    <div class="title">
+        <a href="https://www.theverge.com/apple/682984/apple-punts-on-siri-updates-as-it-struggles-to-keep-up-in-the-ai-race" target="_blank">Apple punts on Siri updates as it struggles to keep up in the AI race</a>
+        <span class="source-tag">the_verge</span>
+    </div>
+    <div class="summary">Siri received minimal attention at WWDC 2025, indicating Apple's struggle to keep pace with advancements in AI technology.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article">
+    <div class="title">
+        <a href="https://www.theverge.com/news/683797/ios-26s-new-adaptive-power-mode-dials-back-performance-to-save-battery" target="_blank">iOS 26’s new ‘adaptive power’ mode dials back performance to save battery</a>
+        <span class="source-tag">the_verge</span>
+    </div>
+    <div class="summary">iOS 26 will introduce an "adaptive power" mode that adjusts performance to extend battery life by lowering screen brightness and managing background activities.</div>
+    <div class="published">Published: June 09, 2025</div>
 </div>
 <div class="article">
     <div class="title">
         <a href="https://www.theverge.com/news/683738/apple-iphone-ios-26-changes-liquid-glass-wwdc-2025" target="_blank">The biggest changes coming to your iPhone with iOS 26</a>
         <span class="source-tag">the_verge</span>
     </div>
-    <div class="summary">Apple's upcoming iOS 26 update will feature a major redesign along with various new functionalities aimed at improving user experience on iPhones.</div>
+    <div class="summary">iOS 26 will introduce a significant redesign along with various new features for iPhones, set to be released this fall.</div>
     <div class="published">Published: June 09, 2025</div>
 </div>
 <div class="article">
@@ -92,7 +187,7 @@
         <a href="https://www.theverge.com/news/683635/retroid-pocket-dual-screen-add-on-nintendo-ds-touchscreen" target="_blank">Retroid&#8217;s $69 second screen is ready for your favorite DS games</a>
         <span class="source-tag">the_verge</span>
     </div>
-    <div class="summary">Retroid has introduced a $69 clamp-on secondary screen accessory that allows modern handheld gaming devices to emulate the dual-screen design of the Nintendo DS.</div>
+    <div class="summary">Retroid has introduced a $69 clamp-on secondary screen accessory that allows users to emulate the Nintendo DS experience on modern handheld devices.</div>
     <div class="published">Published: June 09, 2025</div>
 </div>
 <div class="article">
@@ -100,7 +195,7 @@
         <a href="https://www.theverge.com/movie-reviews/682832/predator-killer-of-killers-review-hulu" target="_blank">Predator: Killer of Killers is a short and sweet joyride through the franchise&#8217;s secret past</a>
         <span class="source-tag">the_verge</span>
     </div>
-    <div class="summary">Hulu's animated film "Predator: Killer of Killers" serves as a prequel to the franchise, exploring its backstory in a concise and engaging manner.</div>
+    <div class="summary">Hulu's animated film "Predator: Killer of Killers" serves as a prequel to the franchise, providing a brief exploration of its hidden backstory.</div>
     <div class="published">Published: June 09, 2025</div>
 </div>
 <div class="article">
@@ -109,174 +204,6 @@
         <span class="source-tag">the_verge</span>
     </div>
     <div class="summary">Roku is testing a new homepage design that includes shortcuts to frequently used apps and a consolidated view of subscription-based content for select users.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.theverge.com/21539047/best-amazon-kindle-deals" target="_blank">Here are the best Kindle deals right now</a>
-        <span class="source-tag">the_verge</span>
-    </div>
-    <div class="summary">The Kindle Scribe is currently available at its lowest price ever, with a $100 discount.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.theverge.com/apple/682833/apples-liquid-glass-redesign-doesnt-look-like-much" target="_blank">Apple’s Liquid Glass redesign doesn’t look like much</a>
-        <span class="source-tag">the_verge</span>
-    </div>
-    <div class="summary">Apple's new "Liquid Glass" design language, introduced at WWDC 2025, emphasizes a translucent and glassy aesthetic but does not significantly depart from previous design principles.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.theverge.com/news/683644/carplay-apple-ios-26-widgets-live-activities-tapbacks-wwdc-25" target="_blank">Apple CarPlay is getting widgets and message tapbacks this fall with iOS 26</a>
-        <span class="source-tag">the_verge</span>
-    </div>
-    <div class="summary">iOS 26 will introduce widgets and message tapbacks to Apple CarPlay, enhancing its usability and aesthetics in compatible vehicles.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.theverge.com/tech/681646/apple-wwdc-2025-news-rumors-ios-26" target="_blank">WWDC 2025: all the news from Apple&#8217;s annual developer conference</a>
-        <span class="source-tag">the_verge</span>
-    </div>
-    <div class="summary">At WWDC 2025, Apple unveiled updates to its operating systems, introduced the "Liquid Glass" design language, and announced new features for developers, including access to on-device Apple Intelligence.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-</div>
-<div class="category-section">
-    <h2 class="category-title">Gaming (8 articles)</h2>
-    
-<div class="article">
-    <div class="title">
-        <a href="https://www.pcgamer.com/games/mmo/dune-awakening-best-base-locations-building-guide/" target="_blank">Dune Awakening base building guide: Best locations and design tips</a>
-        <span class="source-tag">pcgamer</span>
-    </div>
-    <div class="summary">In "Dune: Awakening," players can build bases in the desert to survive harsh conditions, but these bases are designed to be temporary as players progress in the game.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.pcgamer.com/games/i-love-hideo-kojimas-games-but-last-nights-fawning-over-his-genius-from-geoff-keighley-and-the-death-stranding-2-cast-got-me-the-opposite-of-hyped/" target="_blank">I love Hideo Kojima's games, but last night's fawning over his genius from Geoff Keighley and the Death Stranding 2 cast got me the opposite of hyped</a>
-        <span class="source-tag">pcgamer</span>
-    </div>
-    <div class="summary">A recent event promoting "Death Stranding 2" was criticized for focusing more on praise for Hideo Kojima than providing substantial information about the game's themes or gameplay.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.pcgamer.com/games/action/if-hitman-is-a-single-minded-killer-and-basically-the-bad-guy-of-the-game-bond-is-the-hero-io-interactive-talks-about-shifting-priorities-for-its-upcoming-007-game/" target="_blank">'If Hitman is a single-minded killer and basically the bad guy of the game, Bond is the hero': IO Interactive talks about shifting priorities for its upcoming 007 game</a>
-        <span class="source-tag">pcgamer</span>
-    </div>
-    <div class="summary">IO Interactive's upcoming game "007 First Light" aims to differentiate James Bond from Agent 47 by emphasizing Bond's distinct personality and narrative depth.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.pcgamer.com/hardware/introducing-the-rig-everything-under-the-hood-of-the-pc-gaming-shows-top-of-the-line-pc-build/" target="_blank">Introducing ‘The Rig’: Everything under the hood of the PC Gaming Show’s top of the line PC build</a>
-        <span class="source-tag">pcgamer</span>
-    </div>
-    <div class="summary">The PC Gaming Show 2025 showcased a high-end gaming PC build called "The Rig," featuring top-tier components including an AMD Ryzen 9 processor and GIGABYTE graphics card.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.pcgamer.com/games/city-builder/medieval-dynasty-fans-should-check-out-this-third-person-medieval-city-builder-that-just-got-a-demo-on-steam/" target="_blank">Medieval Dynasty fans should check out this third-person medieval city builder that just got a demo on Steam</a>
-        <span class="source-tag">pcgamer</span>
-    </div>
-    <div class="summary">Noble Legacy is a third-person medieval city builder where players develop a town by collecting resources and attracting new citizens, with a demo now available on Steam.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.pcgamer.com/games/action/at-fates-end-is-a-gorgeous-action-adventure-where-you-can-pull-a-legendary-god-sword-from-your-throat-to-work-through-family-trauma-in-duels-with-siblings-who-use-their-own-spines-as-weaponry/" target="_blank">At Fate's End is a gorgeous action adventure where you can pull a 'legendary God Sword' from your throat to work through family trauma in duels with siblings who use their own spines as weaponry</a>
-        <span class="source-tag">pcgamer</span>
-    </div>
-    <div class="summary">At Fate's End is an action-adventure game announced by Thunder Lotus that features family-themed combat where players can use their own body parts as weapons.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.pcgamer.com/hardware/gigabyte-aorus-the-premier-choice-for-an-amd-gaming-pc/" target="_blank">GIGABYTE AORUS: the premier choice for an AMD gaming PC</a>
-        <span class="source-tag">pcgamer</span>
-    </div>
-    <div class="summary">The GIGABYTE X870E AORUS Master motherboard is designed for AMD’s AM5 processors, offering advanced thermal management and high-speed connectivity for gaming PCs.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.pcgamer.com/games/action/techland-boss-says-dying-light-2-forgot-what-made-the-series-special-but-dying-light-the-beast-gets-back-on-track-for-us-this-really-is-dying-light-3/" target="_blank">Techland boss says Dying Light 2 'forgot' what made the series special, but Dying Light: The Beast gets back on track: 'For us, this really is Dying Light 3'</a>
-        <span class="source-tag">pcgamer</span>
-    </div>
-    <div class="summary">Dying Light: The Beast is a direct sequel to the original Dying Light, focusing on survival horror elements and featuring the return of main character Kyle Crane, addressing criticisms of Dying Light 2.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-</div>
-<div class="category-section">
-    <h2 class="category-title">Physics (8 articles)</h2>
-    
-<div class="article">
-    <div class="title">
-        <a href="https://phys.org/news/2025-06-cosmic-rays-astrophysicists-closer.html" target="_blank">Where did cosmic rays come from? Astrophysicists are closer to finding out</a>
-        <span class="source-tag">phys_org</span>
-    </div>
-    <div class="summary">New research from Michigan State University has brought scientists closer to understanding the origins of cosmic rays, identifying a pulsar wind nebula associated with a significant cosmic ray source.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://phys.org/news/2025-06-atomic-nucleus-slightly-energy.html" target="_blank">How an atomic nucleus can have two different shapes with only slightly different energy levels</a>
-        <span class="source-tag">phys_org</span>
-    </div>
-    <div class="summary">Researchers at the Facility for Rare Isotope Beams have found that cobalt-70 isotopes can adopt different nuclear shapes corresponding to slightly different energy levels.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://phys.org/news/2025-06-emerging-pollutants-aggravating-crisis-countries.html" target="_blank">Emerging pollutants are aggravating water crisis in developing countries, say researchers</a>
-        <span class="source-tag">phys_org</span>
-    </div>
-    <div class="summary">A study indicates that emerging pollutants are worsening the water crisis in developing countries, with freshwater demand projected to rise by 55% by 2050.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://phys.org/news/2025-06-peppers-devastating-viral-diseases-gene.html" target="_blank">Protecting peppers from devastating viral diseases through gene pyramiding</a>
-        <span class="source-tag">phys_org</span>
-    </div>
-    <div class="summary">Gene pyramiding, combining the pepy-1 and Pepy-2 genes, significantly enhances pepper plants' resistance to viral diseases compared to those with fewer or no resistance genes.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://phys.org/news/2025-06-qa-leveraging-power-source-world.html" target="_blank">Q&A: Leveraging the power of open source data to map the world's oceans</a>
-        <span class="source-tag">phys_org</span>
-    </div>
-    <div class="summary">Vicki Ferrini, a marine geophysicist, emphasizes the importance of open source data in mapping the world's oceans as part of the Nippon Foundation-GEBCO Seabed 2030 Project.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://phys.org/news/2025-06-protein-affinity-role-ai-drug.html" target="_blank">Protein-binding affinity model expands role of AI in drug discovery</a>
-        <span class="source-tag">phys_org</span>
-    </div>
-    <div class="summary">The Boltz-2 model, developed by MIT and Recursion, achieves state-of-the-art performance in predicting protein binding affinity, enhancing AI's role in drug discovery.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://phys.org/news/2025-06-dont-cancer-genes-strong-immune.html" target="_blank">Why don't bats get cancer? Researchers discover protection from genes and strong immune systems</a>
-        <span class="source-tag">phys_org</span>
-    </div>
-    <div class="summary">Researchers at the University of Rochester have discovered that certain bat species possess genetic and immune system traits that significantly reduce their cancer risk, allowing them to live up to 35 years without developing the disease.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://phys.org/news/2025-06-soil-safety-wheat-cadmium-contamination.html" target="_blank">Soil models may improve safety of wheat amid cadmium contamination</a>
-        <span class="source-tag">phys_org</span>
-    </div>
-    <div class="summary">New soil models developed by the Chinese Academy of Sciences aim to enhance the safety of wheat crops by addressing cadmium contamination, which poses a significant threat to food safety.</div>
     <div class="published">Published: June 09, 2025</div>
 </div>
 </div>
@@ -365,6 +292,98 @@
 </div>
 </div>
 <div class="category-section">
+    <h2 class="category-title">Physics (8 articles)</h2>
+    
+<div class="article">
+    <div class="title">
+        <a href="https://phys.org/news/2025-06-pathways-friendly-cities.html" target="_blank">'Active travel' study identifies pathways for designing walking- and cycling-friendly cities</a>
+        <span class="source-tag">phys_org</span>
+    </div>
+    <div class="article-image">
+        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/active-travel-study-id.jpg" alt="'Active travel' study identifies pathways for designing walking- and cycling-friendly cities" loading="lazy">
+    </div>
+    <div class="summary">A study by UCLA and Google found that informal pedestrian and cyclist infrastructure can effectively promote walking and biking in cities, similar to formal networks.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article">
+    <div class="title">
+        <a href="https://phys.org/news/2025-06-cosmic-rays-astrophysicists-closer.html" target="_blank">Where did cosmic rays come from? Astrophysicists are closer to finding out</a>
+        <span class="source-tag">phys_org</span>
+    </div>
+    <div class="article-image">
+        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/where-did-cosmic-rays.jpg" alt="Where did cosmic rays come from? Astrophysicists are closer to finding out" loading="lazy">
+    </div>
+    <div class="summary">New research from Michigan State University has brought scientists closer to understanding the origins of cosmic rays, identifying a pulsar wind nebula associated with a significant cosmic ray source.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article">
+    <div class="title">
+        <a href="https://phys.org/news/2025-06-atomic-nucleus-slightly-energy.html" target="_blank">How an atomic nucleus can have two different shapes with only slightly different energy levels</a>
+        <span class="source-tag">phys_org</span>
+    </div>
+    <div class="article-image">
+        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/frib-researchers-use-s.jpg" alt="How an atomic nucleus can have two different shapes with only slightly different energy levels" loading="lazy">
+    </div>
+    <div class="summary">Researchers at the Facility for Rare Isotope Beams have found that cobalt-70 isotopes can adopt different nuclear shapes corresponding to slightly different energy levels.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article">
+    <div class="title">
+        <a href="https://phys.org/news/2025-06-emerging-pollutants-aggravating-crisis-countries.html" target="_blank">Emerging pollutants are aggravating water crisis in developing countries, say researchers</a>
+        <span class="source-tag">phys_org</span>
+    </div>
+    <div class="article-image">
+        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/middle-east-water.jpg" alt="Emerging pollutants are aggravating water crisis in developing countries, say researchers" loading="lazy">
+    </div>
+    <div class="summary">A study indicates that emerging pollutants are worsening the water crisis in developing countries, with freshwater demand projected to rise by 55% by 2050.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article">
+    <div class="title">
+        <a href="https://phys.org/news/2025-06-peppers-devastating-viral-diseases-gene.html" target="_blank">Protecting peppers from devastating viral diseases through gene pyramiding</a>
+        <span class="source-tag">phys_org</span>
+    </div>
+    <div class="article-image">
+        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/protecting-peppers-fro.jpg" alt="Protecting peppers from devastating viral diseases through gene pyramiding" loading="lazy">
+    </div>
+    <div class="summary">Gene pyramiding, combining the pepy-1 and Pepy-2 genes, significantly enhances pepper plants' resistance to viral diseases compared to those with fewer or no resistance genes.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article">
+    <div class="title">
+        <a href="https://phys.org/news/2025-06-qa-leveraging-power-source-world.html" target="_blank">Q&A: Leveraging the power of open source data to map the world's oceans</a>
+        <span class="source-tag">phys_org</span>
+    </div>
+    <div class="article-image">
+        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/leveraging-the-power-o.jpg" alt="Q&A: Leveraging the power of open source data to map the world's oceans" loading="lazy">
+    </div>
+    <div class="summary">Vicki Ferrini, a marine geophysicist, emphasizes the importance of open source data in mapping the world's oceans as part of the Nippon Foundation-GEBCO Seabed 2030 Project.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article">
+    <div class="title">
+        <a href="https://phys.org/news/2025-06-protein-affinity-role-ai-drug.html" target="_blank">Protein-binding affinity model expands role of AI in drug discovery</a>
+        <span class="source-tag">phys_org</span>
+    </div>
+    <div class="article-image">
+        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/breakthrough-protein-b.jpg" alt="Protein-binding affinity model expands role of AI in drug discovery" loading="lazy">
+    </div>
+    <div class="summary">The Boltz-2 model, developed by MIT and Recursion, achieves state-of-the-art performance in predicting protein binding affinity, enhancing AI's role in drug discovery.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article">
+    <div class="title">
+        <a href="https://phys.org/news/2025-06-dont-cancer-genes-strong-immune.html" target="_blank">Why don't bats get cancer? Researchers discover protection from genes and strong immune systems</a>
+        <span class="source-tag">phys_org</span>
+    </div>
+    <div class="article-image">
+        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/why-dont-bats-get-canc-1.jpg" alt="Why don't bats get cancer? Researchers discover protection from genes and strong immune systems" loading="lazy">
+    </div>
+    <div class="summary">Researchers at the University of Rochester have discovered that certain bat species possess genetic and immune system traits that significantly reduce their cancer risk, allowing them to live up to 35 years without developing the disease.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+</div>
+<div class="category-section">
     <h2 class="category-title">AI & Tech (16 articles)</h2>
     
 <div class="article">
@@ -372,7 +391,7 @@
         <a href="https://techcrunch.com/2025/06/09/still-no-ai-powered-more-personalized-siri-from-apple-at-wwdc-25/" target="_blank">Still no AI-powered, ‘more personalized’ Siri from Apple at WWDC 25</a>
         <span class="source-tag">techcrunch_ai</span>
     </div>
-    <div class="summary">At WWDC 25, Apple announced that the highly anticipated AI-powered Siri update will require more time to meet quality standards, indicating it may not be available until 2026.</div>
+    <div class="summary">Apple announced at WWDC 25 that updates for a more personalized, AI-powered Siri will be delayed until at least 2026.</div>
     <div class="published">Published: June 09, 2025</div>
 </div>
 <div class="article">
@@ -512,7 +531,7 @@
         <a href="https://www.hollywoodreporter.com/movies/movie-news/ex-marvel-exec-launches-screenwriting-fellowship-1236260247/" target="_blank">Ex-Marvel Exec Launches Screenwriting Fellowship With an Inspirational Focus (Exclusive)</a>
         <span class="source-tag">hollywood_reporter</span>
     </div>
-    <div class="summary">The Wonder Project has launched a screenwriting fellowship in partnership with Stand Together Trust to support emerging writers in telling true-life stories that convey hope and progress.</div>
+    <div class="summary">Jeremy Latcham's production company has partnered with Stand Together Trust to launch a screenwriting fellowship aimed at helping emerging writers tell true-life stories that reflect hope and progress.</div>
     <div class="published">Published: June 09, 2025</div>
 </div>
 <div class="article">
@@ -520,7 +539,99 @@
         <a href="https://www.hollywoodreporter.com/movies/movie-reviews/andy-kaufman-is-me-review-clay-tweel-documentary-1236257056/" target="_blank">‘Andy Kaufman Is Me’ Review: Solid but Unrevelatory Doc Uses Puppetry to Tackle the Iconic Comic</a>
         <span class="source-tag">hollywood_reporter</span>
     </div>
-    <div class="summary">The documentary "Andy Kaufman Is Me" offers a familiar exploration of the iconic comic's life and career but lacks new insights compared to previous works.</div>
+    <div class="summary">The documentary "Andy Kaufman Is Me" offers a familiar exploration of the iconic comic's life but lacks new insights compared to previous works.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+</div>
+<div class="category-section">
+    <h2 class="category-title">Gaming (8 articles)</h2>
+    
+<div class="article">
+    <div class="title">
+        <a href="https://www.pcgamer.com/games/mmo/dune-awakening-buried-treasure-sandbike-scanner/" target="_blank">How to find buried treasure in Dune: Awakening</a>
+        <span class="source-tag">pcgamer</span>
+    </div>
+    <div class="article-image">
+        <img src="https://cdn.mos.cms.futurecdn.net/GmsQLBUy4BDyBHQTBKGA7k.jpg" alt="How to find buried treasure in Dune: Awakening" loading="lazy">
+    </div>
+    <div class="summary">In the game "Dune: Awakening," players can locate buried treasure using a Handheld Scanner and Static Compactor after completing specific quests.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article">
+    <div class="title">
+        <a href="https://www.pcgamer.com/games/mmo/dune-awakening-best-base-locations-building-guide/" target="_blank">Dune Awakening base building guide: Best locations and design tips</a>
+        <span class="source-tag">pcgamer</span>
+    </div>
+    <div class="article-image">
+        <img src="https://cdn.mos.cms.futurecdn.net/2ipNwUR4JKzKkbefurMUCZ.jpg" alt="Dune Awakening base building guide: Best locations and design tips" loading="lazy">
+    </div>
+    <div class="summary">In "Dune: Awakening," players can build bases in the desert to survive harsh conditions, but these bases are designed to be temporary as players progress in the game.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article">
+    <div class="title">
+        <a href="https://www.pcgamer.com/games/i-love-hideo-kojimas-games-but-last-nights-fawning-over-his-genius-from-geoff-keighley-and-the-death-stranding-2-cast-got-me-the-opposite-of-hyped/" target="_blank">I love Hideo Kojima's games, but last night's fawning over his genius from Geoff Keighley and the Death Stranding 2 cast got me the opposite of hyped</a>
+        <span class="source-tag">pcgamer</span>
+    </div>
+    <div class="article-image">
+        <img src="https://cdn.mos.cms.futurecdn.net/dFhhteubjFBV6FZgpsLXC9.png" alt="I love Hideo Kojima's games, but last night's fawning over his genius from Geoff Keighley and the Death Stranding 2 cast got me the opposite of hyped" loading="lazy">
+    </div>
+    <div class="summary">A recent event promoting "Death Stranding 2" was criticized for focusing more on praise for Hideo Kojima than providing substantial information about the game's themes or gameplay.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article">
+    <div class="title">
+        <a href="https://www.pcgamer.com/games/action/if-hitman-is-a-single-minded-killer-and-basically-the-bad-guy-of-the-game-bond-is-the-hero-io-interactive-talks-about-shifting-priorities-for-its-upcoming-007-game/" target="_blank">'If Hitman is a single-minded killer and basically the bad guy of the game, Bond is the hero': IO Interactive talks about shifting priorities for its upcoming 007 game</a>
+        <span class="source-tag">pcgamer</span>
+    </div>
+    <div class="article-image">
+        <img src="https://cdn.mos.cms.futurecdn.net/7nsLnGyPgRSJ8sMpgaPk6g.jpg" alt="'If Hitman is a single-minded killer and basically the bad guy of the game, Bond is the hero': IO Interactive talks about shifting priorities for its upcoming 007 game" loading="lazy">
+    </div>
+    <div class="summary">IO Interactive's upcoming game "007 First Light" aims to differentiate James Bond from Agent 47 by emphasizing Bond's distinct personality and narrative depth.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article">
+    <div class="title">
+        <a href="https://www.pcgamer.com/hardware/introducing-the-rig-everything-under-the-hood-of-the-pc-gaming-shows-top-of-the-line-pc-build/" target="_blank">Introducing ‘The Rig’: Everything under the hood of the PC Gaming Show’s top of the line PC build</a>
+        <span class="source-tag">pcgamer</span>
+    </div>
+    <div class="article-image">
+        <img src="https://cdn.mos.cms.futurecdn.net/nTYHaaYrjt9svKD6NMPUhE.png" alt="Introducing ‘The Rig’: Everything under the hood of the PC Gaming Show’s top of the line PC build" loading="lazy">
+    </div>
+    <div class="summary">The PC Gaming Show 2025 showcased a high-end gaming PC build called "The Rig," featuring top-tier components including an AMD Ryzen 9 processor and GIGABYTE graphics card.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article">
+    <div class="title">
+        <a href="https://www.pcgamer.com/games/city-builder/medieval-dynasty-fans-should-check-out-this-third-person-medieval-city-builder-that-just-got-a-demo-on-steam/" target="_blank">Medieval Dynasty fans should check out this third-person medieval city builder that just got a demo on Steam</a>
+        <span class="source-tag">pcgamer</span>
+    </div>
+    <div class="article-image">
+        <img src="https://cdn.mos.cms.futurecdn.net/LzLvWbDDdYkyMJqUonrTHE.jpg" alt="Medieval Dynasty fans should check out this third-person medieval city builder that just got a demo on Steam" loading="lazy">
+    </div>
+    <div class="summary">Noble Legacy is a third-person medieval city builder where players develop a town by collecting resources and attracting new citizens, with a demo now available on Steam.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article">
+    <div class="title">
+        <a href="https://www.pcgamer.com/games/action/at-fates-end-is-a-gorgeous-action-adventure-where-you-can-pull-a-legendary-god-sword-from-your-throat-to-work-through-family-trauma-in-duels-with-siblings-who-use-their-own-spines-as-weaponry/" target="_blank">At Fate's End is a gorgeous action adventure where you can pull a 'legendary God Sword' from your throat to work through family trauma in duels with siblings who use their own spines as weaponry</a>
+        <span class="source-tag">pcgamer</span>
+    </div>
+    <div class="article-image">
+        <img src="https://cdn.mos.cms.futurecdn.net/hMHt6GNVowHeteM5eeqLYW.jpg" alt="At Fate's End is a gorgeous action adventure where you can pull a 'legendary God Sword' from your throat to work through family trauma in duels with siblings who use their own spines as weaponry" loading="lazy">
+    </div>
+    <div class="summary">At Fate's End is an action-adventure game announced by Thunder Lotus that features family-themed combat where players can use their own body parts as weapons.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article">
+    <div class="title">
+        <a href="https://www.pcgamer.com/hardware/gigabyte-aorus-the-premier-choice-for-an-amd-gaming-pc/" target="_blank">GIGABYTE AORUS: the premier choice for an AMD gaming PC</a>
+        <span class="source-tag">pcgamer</span>
+    </div>
+    <div class="article-image">
+        <img src="https://cdn.mos.cms.futurecdn.net/Jvh9hsL6UmfHq4i3GhZTjM.jpg" alt="GIGABYTE AORUS: the premier choice for an AMD gaming PC" loading="lazy">
+    </div>
+    <div class="summary">The GIGABYTE X870E AORUS Master motherboard is designed for AMD’s AM5 processors, offering advanced thermal management and high-speed connectivity for gaming PCs.</div>
     <div class="published">Published: June 09, 2025</div>
 </div>
 </div>
@@ -529,10 +640,18 @@
     
 <div class="article">
     <div class="title">
-        <a href="https://www.pbs.org/wgbh/pages/frontline/shows/settlement/timelines/april94.html" target="_blank">Tobacco CEOs testify: "Nicotine is not addictive" (1994)</a>
+        <a href="https://apnews.com/article/kennedy-cdc-acip-vaccines-3790c89f45b6314c5c7b686db0e3a8f9" target="_blank">RFK Jr. ousts entire CDC vaccine advisory committee</a>
         <span class="source-tag">hacker_news</span>
     </div>
-    <div class="summary">In 1994, tobacco CEOs testified before Congress claiming that nicotine is not addictive, a statement that has been widely criticized and contradicted by subsequent research.</div>
+    <div class="summary">RFK Jr. has dismissed the entire CDC vaccine advisory committee, a move that has significant implications for public health policy.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article">
+    <div class="title">
+        <a href="https://www.theguardian.com/uk-news/2025/jun/09/google-foxes-roof-london-kings-cross-office" target="_blank">Google battling 'fox infestation' on roof of £1B London office</a>
+        <span class="source-tag">hacker_news</span>
+    </div>
+    <div class="summary">Google is dealing with a fox infestation on the roof of its new £1 billion London office, where the animals have begun to dig burrows in the rooftop garden.</div>
     <div class="published">Published: June 09, 2025</div>
 </div>
 <div class="article">
@@ -545,18 +664,18 @@
 </div>
 <div class="article">
     <div class="title">
-        <a href="https://www.msn.com/en-in/news/world/kamala-harris-won-the-u-s-elections-bombshell-report-claims-voting-machines-were-tampered-with-before-2024/ar-AA1GnteW" target="_blank">Report claims voting machines were tampered with before 2024 elections</a>
+        <a href="https://www.ahmedsaoudi.com/blog/domains-i-love/" target="_blank">Domains I Love</a>
         <span class="source-tag">hacker_news</span>
     </div>
-    <div class="summary">A report claims that voting machines were tampered with prior to the 2024 elections, raising concerns about election integrity.</div>
+    <div class="summary">The article "Domains I Love" discusses various domain names that the author finds appealing, but does not present a specific scientific finding or breakthrough.</div>
     <div class="published">Published: June 09, 2025</div>
 </div>
 <div class="article">
     <div class="title">
-        <a href="https://www.livescience.com/space/unlike-anything-we-have-seen-before-astronomers-discover-mysterious-object-firing-strange-signals-at-earth-every-44-minutes" target="_blank">Object firing signals at Earth every 44 minutes</a>
+        <a href="https://www.livescience.com/space/unlike-anything-we-have-seen-before-astronomers-discover-mysterious-object-firing-strange-signals-at-earth-every-44-minutes" target="_blank">Astronomers have discovered a mysterious object flashing signals from deep space</a>
         <span class="source-tag">hacker_news</span>
     </div>
-    <div class="summary">Astronomers have discovered a mysterious object, ASKAP J1832-0911, that emits pulses of radio waves and X-rays every 44 minutes, with its nature currently unexplained.</div>
+    <div class="summary">Astronomers have discovered a mysterious object named ASKAP J1832-0911 that emits pulses of radio waves and X-rays every 44 minutes, and its nature remains unexplained.</div>
     <div class="published">Published: June 09, 2025</div>
 </div>
 <div class="article">
@@ -589,14 +708,6 @@
         <span class="source-tag">hacker_news</span>
     </div>
     <div class="summary">Munal OS is an experimental operating system written in Rust that features a graphical interface, WASM sandboxing for security, and aims to explore modern OS design principles.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.theguardian.com/books/2025/jun/09/frederick-forsyth-day-of-the-jackal-author-and-former-mi6-agent-dies-aged-86" target="_blank">Frederick Forsyth has died</a>
-        <span class="source-tag">hacker_news</span>
-    </div>
-    <div class="summary">Frederick Forsyth, the acclaimed author known for his thriller "The Day of the Jackal," has passed away at the age of 86 after a brief illness.</div>
     <div class="published">Published: June 09, 2025</div>
 </div>
 <div class="article">
