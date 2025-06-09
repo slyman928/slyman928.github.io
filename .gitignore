@@ -1,8 +1,54 @@
-# Ignore everything
-*
+# Environment variables and API keys
+.env
+*.env
 
-# But allow HTML files
-!*.html
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
 
-# Also ignore .git folder contents (just in case)
-.git/
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Cache files
+article_cache.json
+*.cache
+
+# Log files
+*.log
+deployment.log
+feed_parser.log
+
+# Scripts and deployment files
+*.py
+*.bat
+*.sh
+*.ps1
+deploy*
+
+# Documentation (keep only README if needed)
+GITHUB_PAGES_SETUP.md
+HOSTING_OPTIONS.md
+SCHEDULER_SETUP.md
+
+# Requirements and config files
+requirements.txt
+
+# Temporary files
+Untitled-*
