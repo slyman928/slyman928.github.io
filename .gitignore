@@ -1,0 +1,73 @@
+# Environment variables (contains API keys!)
+.env
+*.env
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Logs
+*.log
+deployment.log
+feed_parser.log
+
+# Cache files
+article_cache.json
+
+# Python distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+
+# Deployment scripts (keep local only)
+deploy_to_*.ps1
+deploy_to_*.bat
+deploy.sh
+deploy.bat
+
+# Other sensitive files
+*.key
+*.pem
+credentials.json
+
+# Only allow these files to be committed:
+# - index.html (the main website)
+# - README.md (repository description)
+# - requirements.txt (for dependencies)
