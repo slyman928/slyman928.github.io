@@ -5,723 +5,2007 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Science & Tech News Digest</title>
     <style>
+        :root {
+            --bg-primary: #0f1419;
+            --bg-secondary: #1a1f2e;
+            --bg-card: #242938;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --border: #334155;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --tag-bg: #1e293b;
+            --tag-text: #7dd3fc;
+            --summary-bg: #1e293b;
+            --summary-border: #334155;
+        }
+        
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --border: #e2e8f0;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --tag-bg: #e0f2fe;
+            --tag-text: #0369a1;
+            --summary-bg: #f8fafc;
+            --summary-border: #e5e7eb;
+        }
+        
+        * { box-sizing: border-box; }
+        
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            margin: 0; padding: 40px; background: linear-gradient(135deg, #f6faff 0%, #e0f2fe 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif; 
+            margin: 0; padding: 40px 20px; 
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
             line-height: 1.6;
+            min-height: 100vh;
+            transition: all 0.3s ease;
         }
-        .container { max-width: 800px; margin: 0 auto; }
-        .header { text-align: center; margin-bottom: 3em; }
-        .header h1 { color: #1e40af; margin-bottom: 0.5em; }
-        .timestamp { color: #6b7280; font-size: 0.9em; }
+        
+        .container { max-width: 900px; margin: 0 auto; }
+        
+        .header { 
+            text-align: center; margin-bottom: 3em; 
+            position: relative;
+        }
+        
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            padding: 0.5em 1em;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+        }
+        
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        .header h1 { 
+            color: var(--accent); 
+            margin-bottom: 0.5em; 
+            font-size: 2.5em;
+            font-weight: 700;
+            text-shadow: 0 2px 4px var(--shadow);
+        }
+        
+        .timestamp { 
+            color: var(--text-muted); 
+            font-size: 0.9em; 
+            margin-bottom: 1em;
+        }
+        
+        .stats { 
+            color: var(--text-secondary); 
+            font-size: 1.1em;
+            background: var(--bg-card);
+            padding: 1em 2em;
+            border-radius: 50px;
+            display: inline-block;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+        
+        .filter-container { 
+            text-align: center; 
+            margin-bottom: 3em; 
+            padding: 2em; 
+            background: var(--bg-card); 
+            border-radius: 20px;
+            box-shadow: 0 8px 32px var(--shadow);
+            border: 1px solid var(--border);
+        }
+        
+        .filter-container h3 {
+            margin: 0 0 1.5em 0;
+            color: var(--text-primary);
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        
+        .filter-btn { 
+            margin: 0.4em; 
+            padding: 0.7em 1.4em; 
+            border: 2px solid var(--border);
+            background: var(--bg-secondary); 
+            color: var(--text-primary);
+            border-radius: 25px; 
+            cursor: pointer;
+            transition: all 0.3s ease; 
+            font-size: 0.9em;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5em;
+        }
+        
+        .filter-btn:hover { 
+            border-color: var(--accent); 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+        
+        .filter-btn.active { 
+            background: var(--accent); 
+            color: white; 
+            border-color: var(--accent);
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+        }
+        
+        .clear-filters { 
+            margin: 0.4em; 
+            padding: 0.7em 1.4em; 
+            background: #ef4444; 
+            color: white;
+            border: none; 
+            border-radius: 25px; 
+            cursor: pointer; 
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .clear-filters:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+        
         .article { 
-            margin-bottom: 2em; padding: 2em; border-radius: 16px; 
-            background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border-left: 4px solid #3b82f6;
-            transition: transform 0.2s ease;
+            margin-bottom: 2.5em; 
+            padding: 2.5em; 
+            border-radius: 24px; 
+            background: var(--bg-card); 
+            box-shadow: 0 8px 32px var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
         }
-        .article:hover { transform: translateY(-2px); }
+        
+        .article::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(45deg, var(--accent), #8b5cf6);
+            transition: width 0.3s ease;
+        }
+        
+        .article:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 16px 48px var(--shadow);
+        }
+        
+        .article:hover::before {
+            width: 8px;
+        }
+        
+        .article.hidden { display: none; }
+        
         .title { 
-            font-size: 1.3em; font-weight: 600; margin-bottom: 0.8em; 
-            line-height: 1.4;
+            font-size: 1.4em; 
+            font-weight: 700; 
+            margin-bottom: 1em; 
+            line-height: 1.3;
         }
-        .title a { color: #1e40af; text-decoration: none; }
-        .title a:hover { text-decoration: underline; }
+        
+        .title a { 
+            color: var(--text-primary); 
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .title a:hover { 
+            color: var(--accent);
+        }
+        
+        .tag-list { 
+            margin-bottom: 1.5em; 
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5em;
+        }
+        
+        .tag { 
+            background: var(--tag-bg); 
+            color: var(--tag-text); 
+            padding: 0.4em 0.8em; 
+            border-radius: 16px; 
+            font-size: 0.8em; 
+            font-weight: 500;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        
+        .tag:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        
+        .source-tag { 
+            background: var(--accent); 
+            color: white; 
+            padding: 0.3em 0.8em; 
+            border-radius: 12px; 
+            font-size: 0.8em; 
+            margin-left: 1em;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+        }
+        
         .article-image {
-            margin: 1em 0;
+            margin: 1.5em 0; 
             text-align: center;
         }
+        
         .article-image img {
-            max-width: 100%;
-            height: auto;
-            max-height: 300px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 100%; 
+            height: auto; 
+            max-height: 350px;
+            border-radius: 16px; 
+            box-shadow: 0 8px 24px var(--shadow);
+            transition: transform 0.3s ease;
         }
+        
+        .article-image img:hover {
+            transform: scale(1.02);
+        }
+        
         .summary { 
-            color: #374151; font-size: 1.05em; 
-            background: #f8fafc; padding: 1em; border-radius: 8px;
-            border-left: 3px solid #e5e7eb;
+            color: var(--text-secondary); 
+            font-size: 1.1em; 
+            background: var(--summary-bg); 
+            padding: 1.5em; 
+            border-radius: 16px;
+            border-left: 4px solid var(--summary-border);
+            line-height: 1.7;
+            position: relative;
         }
+        
+        .summary::before {
+            content: '"';
+            font-size: 3em;
+            color: var(--accent);
+            position: absolute;
+            top: -0.2em;
+            left: 0.5em;
+            opacity: 0.3;
+        }
+        
         .published { 
-            color: #6b7280; font-size: 0.85em; margin-top: 0.5em;
+            color: var(--text-muted); 
+            font-size: 0.9em; 
+            margin-top: 1em;
             font-style: italic;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
         }
+        
+        .published::before {
+            content: '📅';
+            opacity: 0.7;
+        }
+        
         .footer { 
-            text-align: center; margin-top: 3em; padding-top: 2em;
-            border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 0.9em;
+            text-align: center; 
+            margin-top: 4em; 
+            padding-top: 2em;
+            border-top: 2px solid var(--border); 
+            color: var(--text-muted); 
+            font-size: 1em;
+            background: var(--bg-card);
+            padding: 2em;
+            border-radius: 20px;
+            box-shadow: 0 4px 16px var(--shadow);
         }
-        .category-section { margin-bottom: 3em; }
-        .category-title { 
-            font-size: 1.5em; color: #1e40af; margin-bottom: 1em; 
-            border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5em;
+        
+        .footer::before {
+            content: '⚡';
+            display: block;
+            font-size: 2em;
+            margin-bottom: 0.5em;
         }
-        .source-tag { 
-            background: #3b82f6; color: white; padding: 0.2em 0.5em; 
-            border-radius: 4px; font-size: 0.75em; margin-left: 0.5em;
+        
+        @media (max-width: 768px) {
+            body { padding: 20px 15px; }
+            .header h1 { font-size: 2em; }
+            .theme-toggle { 
+                position: static; 
+                margin: 1em auto 0; 
+                display: flex;
+            }
+            .article { padding: 1.5em; }
+            .filter-container { padding: 1.5em; }
+            .filter-btn { 
+                padding: 0.6em 1em; 
+                font-size: 0.85em; 
+            }
         }
-        .stats { text-align: center; margin-bottom: 2em; color: #6b7280; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .article {
+            animation: fadeIn 0.6s ease-out;
+        }
     </style>
 </head>
-<body>
+<body data-theme="dark">
 <div class="container">
     <div class="header">
+        <button class="theme-toggle" onclick="toggleTheme()">
+            <span class="theme-icon">🌙</span>
+            <span class="theme-text">Dark Mode</span>
+        </button>
         <h1>🔬 Science & Tech News Digest</h1>
-        <div class="timestamp">Generated on 2025-06-10 12:01:50</div>
+        <div class="timestamp">Generated on 2025-06-10 12:44:25</div>
         <div class="stats">
-            69 articles from 9 sources
+            143 articles from 20 sources
         </div>
     </div>
+    
+    <div class="filter-container">
+        <h3>Filter by topic:</h3>
+        <button class="filter-btn active" data-tag="all">📰 All Articles</button>
+        <button class="filter-btn" data-tag="AI">AI (21)</button><button class="filter-btn" data-tag="Alerts">Alerts (5)</button><button class="filter-btn" data-tag="Business">Business (8)</button><button class="filter-btn" data-tag="DIY">DIY (7)</button><button class="filter-btn" data-tag="Discussion">Discussion (18)</button><button class="filter-btn" data-tag="Economics">Economics (4)</button><button class="filter-btn" data-tag="Gadgets">Gadgets (16)</button><button class="filter-btn" data-tag="Gaming">Gaming (8)</button><button class="filter-btn" data-tag="Hardware">Hardware (7)</button><button class="filter-btn" data-tag="In-depth">In-depth (8)</button><button class="filter-btn" data-tag="Physics">Physics (8)</button><button class="filter-btn" data-tag="Productivity">Productivity (6)</button><button class="filter-btn" data-tag="Research">Research (31)</button><button class="filter-btn" data-tag="Science">Science (24)</button><button class="filter-btn" data-tag="Security">Security (5)</button><button class="filter-btn" data-tag="Society">Society (4)</button><button class="filter-btn" data-tag="Tech News">Tech News (50)</button><button class="filter-btn" data-tag="Technology">Technology (42)</button><button class="filter-btn" data-tag="Tips">Tips (6)</button>
+        <button class="clear-filters" onclick="clearFilters()">🗑️ Clear Filters</button>
+    </div>
+    
+    <div class="articles-container">
 
-<div class="category-section">
-    <h2 class="category-title">Gaming (8 articles)</h2>
-    
-<div class="article">
+<div class="article" data-tags="technology society">
     <div class="title">
-        <a href="https://www.pcgamer.com/games/adventure/if-youve-ever-wanted-to-play-an-npc-in-a-hitman-level-then-do-i-have-the-steam-next-fest-demo-for-you/" target="_blank">If you've ever wanted to play an NPC in a Hitman level then do I have the Steam Next Fest demo for you</a>
-        <span class="source-tag">pcgamer</span>
+        <a href="https://news.mit.edu/2025/mit-students-postdocs-explore-inner-workings-capitol-hill-0602" target="_blank">MIT students and postdoc explore the inner workings of Capitol Hill</a>
+        <span class="source-tag">mit_society</span>
     </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Society</span></div>
     <div class="article-image">
-        <img src="https://cdn.mos.cms.futurecdn.net/epFR34mGpPBuk7QwDFznMG.png" alt="If you've ever wanted to play an NPC in a Hitman level then do I have the Steam Next Fest demo for you" loading="lazy">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202505/mit-spi-cvd-2025-cov.jpg?itok=kX2qPEls" alt="MIT students and postdoc explore the inner workings of Capitol Hill" loading="lazy">
     </div>
-    <div class="summary">The Steam Next Fest demo for the game Elevator Music allows players to experience the role of an elevator attendant, highlighting the potential for subtle interference with power dynamics.</div>
+    <div class="summary">MIT students and a postdoc visited Washington, D.C. to advocate for federal science funding and policies, meeting with 66 congressional offices to address critical issues.</div>
+    <div class="published">Published: June 02, 2025</div>
+</div>
+<div class="article" data-tags="tech news discussion">
+    <div class="title">
+        <a href="https://news.ycombinator.com/item?id=44238171" target="_blank">Show HN: Chili3d – A open-source, browser-based 3D CAD application</a>
+        <span class="source-tag">hn_official</span>
+    </div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Discussion</span></div>
+    <div class="summary">Chili3d is an open-source, browser-based 3D CAD application designed for creating and editing 3D models.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="security alerts">
     <div class="title">
-        <a href="https://www.pcgamer.com/hardware/gaming-monitors/after-15-months-and-3-800-hours-of-worst-case-usage-one-independent-test-finds-oled-burn-in-is-now-almost-a-non-issue/" target="_blank">After 15 months and 3,800 hours of 'worst case' usage, one independent test finds OLED burn-in is now almost a non-issue</a>
-        <span class="source-tag">pcgamer</span>
+        <a href="https://www.cisa.gov/news-events/cybersecurity-advisories/aa25-141a" target="_blank">Russian GRU Targeting Western Logistics Entities and Technology Companies</a>
+        <span class="source-tag">us_cert</span>
     </div>
+    <div class="tag-list"><span class="tag">Security</span><span class="tag">Alerts</span></div>
     <div class="article-image">
-        <img src="https://cdn.mos.cms.futurecdn.net/8jwJorGdF9RFyagTdmfND.jpg" alt="After 15 months and 3,800 hours of 'worst case' usage, one independent test finds OLED burn-in is now almost a non-issue" loading="lazy">
+        <img src="https://www.cisa.gov/sites/default/files/styles/large/public/2025-05/Countries%20with%20Targeted%20Entities.png?itok=UKD_QLvF" alt="Russian GRU Targeting Western Logistics Entities and Technology Companies" loading="lazy">
     </div>
-    <div class="summary">A long-term test of a QD-OLED monitor indicates that OLED burn-in is becoming a negligible concern after 15 months of intensive use.</div>
+    <div class="summary">A joint advisory has revealed that the Russian GRU is targeting Western logistics and technology companies, particularly those involved in supporting Ukraine.</div>
+    <div class="published">Published: May 12, 2025</div>
+</div>
+<div class="article" data-tags="technology in-depth">
+    <div class="title">
+        <a href="https://arstechnica.com/security/2025/06/chrome-boots-2-certificate-authorities-citing-a-lack-of-trust-and-confidence/" target="_blank">Two certificate authorities booted from the good graces of Chrome</a>
+        <span class="source-tag">ars_technica</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">In-depth</span></div>
+    <div class="article-image">
+        <img src="https://cdn.arstechnica.net/wp-content/uploads/2025/06/https-1152x648.jpg" alt="Two certificate authorities booted from the good graces of Chrome" loading="lazy">
+    </div>
+    <div class="summary">Google will stop trusting certificates from Chunghwa Telecom and Netlock due to observed compliance failures and diminished reliability.</div>
+    <div class="published">Published: June 04, 2025</div>
+</div>
+<div class="article" data-tags="physics science">
+    <div class="title">
+        <a href="https://phys.org/news/2025-06-image-central-brazil-cerrado.html" target="_blank">Image: Central Brazil Cerrado</a>
+        <span class="source-tag">phys_org</span>
+    </div>
+    <div class="tag-list"><span class="tag">Physics</span><span class="tag">Science</span></div>
+    <div class="article-image">
+        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/image-central-brazil-c.jpg" alt="Image: Central Brazil Cerrado" loading="lazy">
+    </div>
+    <div class="summary">The Serra de Caldas, a prominent oval-shaped plateau in central Brazil, rises approximately 300 meters above the surrounding landscape.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="tech news business">
     <div class="title">
-        <a href="https://www.pcgamer.com/games/rpg/i-couldnt-picture-how-death-howl-a-soulslike-deckbuilder-could-possibly-marry-the-two-genres-until-i-played-its-steam-next-fest-demo/" target="_blank">I couldn't picture how Death Howl, a soulslike deckbuilder, could possibly marry the two genres—until I played its Steam Next Fest demo</a>
-        <span class="source-tag">pcgamer</span>
+        <a href="https://venturebeat.com/ai/zencoder-just-launched-an-ai-that-can-replace-days-of-qa-work-in-two-hours/" target="_blank">Zencoder just launched an AI that can replace days of QA work in two hours</a>
+        <span class="source-tag">venturebeat</span>
     </div>
-    <div class="article-image">
-        <img src="https://cdn.mos.cms.futurecdn.net/hQ3cfHMAH7EJjbCXHagawj.png" alt="I couldn't picture how Death Howl, a soulslike deckbuilder, could possibly marry the two genres—until I played its Steam Next Fest demo" loading="lazy">
-    </div>
-    <div class="summary">The demo for Death Howl successfully combines soulslike gameplay with deckbuilding mechanics, allowing players to explore a spirit world while utilizing strategic card synergies.</div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Business</span></div>
+    <div class="summary">Zencoder introduced Zentester, an AI tool that automates end-to-end software testing, reducing the time required for quality assurance from days to hours.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="hardware diy">
     <div class="title">
-        <a href="https://www.pcgamer.com/games/mmo/dune-awakening-carbon-ore-locations/" target="_blank">Where to find carbon ore in Dune: Awakening</a>
-        <span class="source-tag">pcgamer</span>
+        <a href="https://hackaday.com/2025/06/09/saving-green-books-from-poison-paranoia/" target="_blank">Saving Green Books from Poison Paranoia</a>
+        <span class="source-tag">hackaday</span>
     </div>
+    <div class="tag-list"><span class="tag">Hardware</span><span class="tag">DIY</span></div>
     <div class="article-image">
-        <img src="https://cdn.mos.cms.futurecdn.net/UcfwPuChrWLU4cygpTxmVW.jpg" alt="Where to find carbon ore in Dune: Awakening" loading="lazy">
+        <img src="https://hackaday.com/wp-content/uploads/2025/06/paris-green-books.webp" alt="Saving Green Books from Poison Paranoia" loading="lazy">
     </div>
-    <div class="summary">Carbon ore in Dune: Awakening can be found near the drum sand in southern Jabal Eifrit Al-janub and in the hills bordering Hagga Rift.</div>
+    <div class="summary">Researchers at The University of St. Andrews have developed a cost-effective method for detecting the toxic pigment arsenic in vintage green books using a hand-held vis-IR spectrometer.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="research science">
     <div class="title">
-        <a href="https://www.pcgamer.com/games/grand-theft-auto/here-comes-the-giant-list-of-cuts-its-a-sad-day-for-gta-6s-fan-made-map-project-as-players-begin-to-lament-the-loss-of-the-panhandle/" target="_blank">'Here comes the giant list of cuts': It's a sad day for GTA 6's fan-made map project as players begin to lament the loss of the panhandle</a>
-        <span class="source-tag">pcgamer</span>
+        <a href="https://news.mit.edu/2025/how-brain-distinguishes-between-ambiguous-hypotheses-0606" target="_blank">How the brain distinguishes between ambiguous hypotheses</a>
+        <span class="source-tag">mit_research</span>
     </div>
+    <div class="tag-list"><span class="tag">Research</span><span class="tag">Science</span></div>
     <div class="article-image">
-        <img src="https://cdn.mos.cms.futurecdn.net/p6YnbkWRSkYFWJWiVoiTQm.jpg" alt="'Here comes the giant list of cuts': It's a sad day for GTA 6's fan-made map project as players begin to lament the loss of the panhandle" loading="lazy">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202506/MIT-Ambig-Land-01-press.jpg?itok=x55_oH3t" alt="How the brain distinguishes between ambiguous hypotheses" loading="lazy">
     </div>
-    <div class="summary">The fan-made map project for GTA 6 is facing challenges as players express concerns about the accuracy and completeness of the map as the official release approaches.</div>
+    <div class="summary">New research indicates that a specific brain region involved in navigation uses distinct neural activity patterns to encode competing hypotheses about ambiguous landmarks.</div>
+    <div class="published">Published: June 06, 2025</div>
+</div>
+<div class="article" data-tags="ai tech news">
+    <div class="title">
+        <a href="https://techcrunch.com/2025/06/09/openai-claims-to-have-hit-10b-in-annual-revenue/" target="_blank">OpenAI claims to have hit $10B in annual revenue</a>
+        <span class="source-tag">techcrunch_ai</span>
+    </div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Tech News</span></div>
+    <div class="summary">OpenAI reported reaching $10 billion in annual recurring revenue, significantly up from $5.5 billion the previous year, driven by its consumer products and API services.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article" data-tags="ai tech news">
+    <div class="title">
+        <a href="https://www.artificialintelligence-news.com/news/magistral-mistral-ai-challenges-big-tech-reasoning-model/" target="_blank">Magistral: Mistral AI challenges big tech with reasoning model</a>
+        <span class="source-tag">ai_news</span>
+    </div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Tech News</span></div>
+    <div class="summary">Mistral AI has launched its reasoning model called Magistral, available in both an open-source version and a commercial edition.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="ai research">
     <div class="title">
-        <a href="https://www.pcgamer.com/games/action/this-medieval-slasher-looks-like-an-80s-comic-that-inspired-100-death-metal-bands-and-you-should-try-its-10-minute-steam-next-fest-demo/" target="_blank">This medieval slasher looks like an '80s comic that inspired 100 death metal bands, and you should try its 10-minute Steam Next Fest demo</a>
-        <span class="source-tag">pcgamer</span>
+        <a href="https://news.mit.edu/2025/envisioning-future-where-health-care-tech-leaves-some-behind-0609" target="_blank">Envisioning a future where health care tech leaves some behind</a>
+        <span class="source-tag">mit_ai</span>
     </div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Research</span></div>
     <div class="article-image">
-        <img src="https://cdn.mos.cms.futurecdn.net/4UguQe9r2GkfJizTPoBRGg.jpg" alt="This medieval slasher looks like an '80s comic that inspired 100 death metal bands, and you should try its 10-minute Steam Next Fest demo" loading="lazy">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202506/Annaliese%20statue%20crop.jpg?itok=tb-rkzoF" alt="Envisioning a future where health care tech leaves some behind" loading="lazy">
     </div>
-    <div class="summary">The Steam Next Fest demo for the game "Black Raven" features a 2.5D action-adventure experience rooted in Slavic folklore, showcasing intense violence and a dark narrative.</div>
+    <div class="summary">The winning essay of the Envisioning the Future of Computing Prize highlights the issue of health care disparities in the context of advancing technology.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article" data-tags="tech news discussion">
+    <div class="title">
+        <a href="https://bbenchoff.github.io/pages/FiniteAtari.html" target="_blank">Finding Atari Games in Randomly Generated Data</a>
+        <span class="source-tag">hacker_news</span>
+    </div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Discussion</span></div>
+    <div class="summary">A project generated 30 billion random 4kB files to identify potential Atari games, ultimately using a classifier system to test these files against an Atari 2600 emulator.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="tech news business">
     <div class="title">
-        <a href="https://www.pcgamer.com/games/fighting/invincible-vs-might-be-hyperviolent-but-the-devs-want-to-salve-the-sting-of-getting-combod-to-death-we-want-you-to-be-an-active-participant-even-when-youre-getting-hit/" target="_blank">Invincible VS might be hyperviolent, but the devs want to salve the sting of getting combo'd to death: 'We want you to be an active participant, even when you're getting hit'</a>
-        <span class="source-tag">pcgamer</span>
+        <a href="https://venturebeat.com/games/epic-games-and-section-9-have-an-atmospheric-action-adventure-in-end-of-abyss-preview/" target="_blank">Epic Games and Section 9 have an atmospheric action-adventure in End of Abyss | preview</a>
+        <span class="source-tag">venturebeat</span>
     </div>
-    <div class="article-image">
-        <img src="https://cdn.mos.cms.futurecdn.net/cGr3CdPkeBKQoo5fYANUMQ.png" alt="Invincible VS might be hyperviolent, but the devs want to salve the sting of getting combo'd to death: 'We want you to be an active participant, even when you're getting hit'" loading="lazy">
-    </div>
-    <div class="summary">The developers of "Invincible VS" aim to enhance player engagement during combat by allowing opportunities to break out of combos, promoting active participation even when being hit.</div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Business</span></div>
+    <div class="summary">Section 9 Interactive is set to release its atmospheric action-adventure game, End of Abyss, in 2026 for PC, PlayStation 5, and Xbox Series X|S, featuring exploration and combat in a dark sci-fi world.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="tech news discussion">
     <div class="title">
-        <a href="https://www.pcgamer.com/games/the-10-best-games-of-summer-game-fest-2025/" target="_blank">The 10 best games of Summer Game Fest 2025</a>
-        <span class="source-tag">pcgamer</span>
+        <a href="https://mistral.ai/news/magistral" target="_blank">Magistral — the first reasoning model by Mistral AI</a>
+        <span class="source-tag">hn_official</span>
     </div>
-    <div class="article-image">
-        <img src="https://cdn.mos.cms.futurecdn.net/z3iVR98xe2H2u3RNYDHvbf.png" alt="The 10 best games of Summer Game Fest 2025" loading="lazy">
-    </div>
-    <div class="summary">A selection of the ten best games from the Summer Game Fest 2025 showcases highlights various exciting trailers and reveals from multiple gaming events.</div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Discussion</span></div>
+    <div class="summary">Mistral AI has introduced Magistral, its first reasoning model designed for domain-specific, transparent, and multilingual reasoning.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
+<div class="article" data-tags="science research">
+    <div class="title">
+        <a href="https://www.sciencedaily.com/releases/2025/06/250610004057.htm" target="_blank">2,000 miles through rivers and ice: Mapping neanderthals’ hidden superhighways across eurasia</a>
+        <span class="source-tag">science_daily</span>
+    </div>
+    <div class="tag-list"><span class="tag">Science</span><span class="tag">Research</span></div>
+    <div class="summary">Anthropologists have mapped potential pathways used by Neanderthals, suggesting they traveled approximately 2,000 miles across northern Eurasia using river valleys as natural highways during warmer periods.</div>
+    <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="category-section">
-    <h2 class="category-title">Technology (14 articles)</h2>
-    
-<div class="article">
+<div class="article" data-tags="tech news discussion">
+    <div class="title">
+        <a href="https://github.com/autoscrape-labs/pydoll" target="_blank">Show HN: PyDoll – Async Python scraping engine with native CAPTCHA bypass</a>
+        <span class="source-tag">hacker_news</span>
+    </div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Discussion</span></div>
+    <div class="summary">PyDoll is an asynchronous Python scraping engine that bypasses CAPTCHAs natively and operates without webdrivers, enhancing automation tasks.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="gaming">
+    <div class="title">
+        <a href="https://www.pcgamer.com/games/strategy/sizzle-and-stack-is-a-cooking-strategy-game-which-truly-captures-the-chaos-of-making-meals-for-angry-customers-like-no-other/" target="_blank">Sizzle and Stack is a cooking strategy game which truly captures the chaos of making meals for angry customers like no other</a>
+        <span class="source-tag">pcgamer</span>
+    </div>
+    <div class="tag-list"><span class="tag">Gaming</span></div>
+    <div class="article-image">
+        <img src="https://cdn.mos.cms.futurecdn.net/tMycLcE8ER2cPF838ogtMd.jpg" alt="Sizzle and Stack is a cooking strategy game which truly captures the chaos of making meals for angry customers like no other" loading="lazy">
+    </div>
+    <div class="summary">Sizzle and Stack is a cooking strategy game that captures the chaotic experience of preparing meals under pressure, starting with simple dishes and escalating in complexity.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="ai tech news">
+    <div class="title">
+        <a href="https://www.artificialintelligence-news.com/news/reddit-sues-anthropic-for-scraping-user-data-to-train-ai/" target="_blank">Reddit sues Anthropic for scraping user data to train AI</a>
+        <span class="source-tag">ai_news</span>
+    </div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Tech News</span></div>
+    <div class="summary">Reddit has filed a lawsuit against Anthropic for allegedly scraping user data without permission to train its AI models.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="ai tech news">
+    <div class="title">
+        <a href="https://techcrunch.com/2025/06/09/from-spatial-widgets-to-realistic-personas-all-the-visionos-updates-apple-announced-at-wwdc/" target="_blank">From spatial widgets to realistic Personas: All the visionOS updates Apple announced at WWDC</a>
+        <span class="source-tag">techcrunch_ai</span>
+    </div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Tech News</span></div>
+    <div class="summary">Apple introduced updates to visionOS 26, enhancing its mixed reality headset with customizable spatial widgets that integrate digital content into users' physical environments.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article" data-tags="economics research">
+    <div class="title">
+        <a href="https://news.mit.edu/2025/proud-history-promising-future-mit-work-on-manufacturing-0527" target="_blank">The proud history and promising future of MIT’s work on manufacturing</a>
+        <span class="source-tag">mit_economics</span>
+    </div>
+    <div class="tag-list"><span class="tag">Economics</span><span class="tag">Research</span></div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202505/MIT-ManuJobsFor-01-press.jpg?itok=unA_XM8X" alt="The proud history and promising future of MIT’s work on manufacturing" loading="lazy">
+    </div>
+    <div class="summary">MIT's Initiative for New Manufacturing aims to enhance U.S. manufacturing and job growth, continuing the Institute's long-standing commitment to industrial production.</div>
+    <div class="published">Published: May 27, 2025</div>
+</div>
+<div class="article" data-tags="ai tech news">
+    <div class="title">
+        <a href="https://www.artificialintelligence-news.com/news/ai-chip-demand-tsmc-supply-shortage-2025/" target="_blank">TSMC reports record AI chip demand amid Trump tariff uncertainty</a>
+        <span class="source-tag">ai_news</span>
+    </div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Tech News</span></div>
+    <div class="summary">TSMC is experiencing record demand for AI chips but is struggling to meet this demand due to trade tensions and geopolitical risks affecting the semiconductor supply chain.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology in-depth">
+    <div class="title">
+        <a href="https://arstechnica.com/security/2025/05/german-police-say-theyve-identified-trickbot-ransomware-kingpin/" target="_blank">Ransomware kingpin “Stern” apparently IDed by German law enforcement</a>
+        <span class="source-tag">ars_technica</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">In-depth</span></div>
+    <div class="article-image">
+        <img src="https://cdn.arstechnica.net/wp-content/uploads/2025/05/stern-1152x648.jpg" alt="Ransomware kingpin “Stern” apparently IDed by German law enforcement" loading="lazy">
+    </div>
+    <div class="summary">German law enforcement has identified the leader of the Trickbot cybercrime cartel, known as "Stern," as 36-year-old Vitaly Nikolaevich Kovalev.</div>
+    <div class="published">Published: May 31, 2025</div>
+</div>
+<div class="article" data-tags="ai research">
     <div class="title">
         <a href="https://news.mit.edu/2025/how-we-really-judge-ai-0610" target="_blank">How we really judge AI</a>
-        <span class="source-tag">mit_news</span>
+        <span class="source-tag">mit_ai</span>
     </div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Research</span></div>
     <div class="article-image">
         <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202506/MIT-AI-Aversion-Appreciation-01.jpg?itok=vlwejm54" alt="How we really judge AI" loading="lazy">
     </div>
     <div class="summary">A new study reveals that people's attitudes toward AI are nuanced, evaluating its usefulness on a case-by-case basis rather than aligning strictly with techno-optimism or Luddism.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="research science">
     <div class="title">
-        <a href="https://news.mit.edu/2025/each-of-us-holds-piece-of-the-solution-0610" target="_blank">“Each of us holds a piece of the solution”</a>
-        <span class="source-tag">mit_news</span>
+        <a href="https://news.mit.edu/2025/how-we-really-judge-ai-0610" target="_blank">How we really judge AI</a>
+        <span class="source-tag">mit_research</span>
     </div>
+    <div class="tag-list"><span class="tag">Research</span><span class="tag">Science</span></div>
     <div class="article-image">
-        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202505/mit-climate-project-gathering.jpg?itok=HwBV_LDK" alt="“Each of us holds a piece of the solution”" loading="lazy">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202506/MIT-AI-Aversion-Appreciation-01.jpg?itok=vlwejm54" alt="How we really judge AI" loading="lazy">
     </div>
-    <div class="summary">A community gathering at MIT, led by Vice President for Energy and Climate Evelyn Wang, focused on the Climate Project and encouraged collaboration among students, faculty, and staff to address climate challenges.</div>
+    <div class="summary">A new study reveals that people's attitudes toward AI are nuanced, evaluating its usefulness on a case-by-case basis rather than aligning strictly with techno-optimism or Luddism.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="tech news discussion">
     <div class="title">
-        <a href="https://news.mit.edu/2025/universal-nanosensor-unlocks-plant-growth-secrets-0609" target="_blank">Universal nanosensor unlocks the secrets to plant growth</a>
-        <span class="source-tag">mit_news</span>
+        <a href="https://github.com/big-nacho/patolette" target="_blank">Show HN: High End Color Quantizer</a>
+        <span class="source-tag">hn_official</span>
     </div>
-    <div class="article-image">
-        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202505/smart-distap.jpg?itok=aOnFgEyr" alt="Universal nanosensor unlocks the secrets to plant growth" loading="lazy">
-    </div>
-    <div class="summary">Researchers from SMART DiSTAP developed a near-infrared fluorescent nanosensor that can monitor the primary plant growth hormone, indole-3-acetic acid, in real-time without harming the plant.</div>
-    <div class="published">Published: June 09, 2025</div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Discussion</span></div>
+    <div class="summary">The article introduces "patolette," a C/Python color quantization and dithering library that implements a weighted variant of Xiaolin Wu's PCA-based quantizer and supports advanced features like saliency maps and KMeans refinement.</div>
+    <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="physics science">
     <div class="title">
-        <a href="https://news.mit.edu/2025/ai-enabled-control-system-helps-autonomous-drones-uncertain-environments-0609" target="_blank">AI-enabled control system helps autonomous drones stay on target in uncertain environments</a>
-        <span class="source-tag">mit_news</span>
+        <a href="https://phys.org/news/2025-06-link-bots-explore-cooperate.html" target="_blank">'Link-bots' can move, explore, cooperate without sensing or computation</a>
+        <span class="source-tag">phys_org</span>
     </div>
+    <div class="tag-list"><span class="tag">Physics</span><span class="tag">Science</span></div>
     <div class="article-image">
-        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202506/MIT_MetaLearning-01.jpg?itok=W4xrH8QL" alt="AI-enabled control system helps autonomous drones stay on target in uncertain environments" loading="lazy">
+        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/robots-made-of-linked.jpg" alt="'Link-bots' can move, explore, cooperate without sensing or computation" loading="lazy">
     </div>
-    <div class="summary">MIT researchers created a machine learning-based adaptive control algorithm that enables autonomous drones to adjust their flight paths in response to unpredictable disturbances like gusting winds.</div>
-    <div class="published">Published: June 09, 2025</div>
+    <div class="summary">Harvard researchers developed 'link-bots' that can move, explore, and cooperate without the need for sensing or computation, mimicking natural coordinated behaviors.</div>
+    <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="tech news business">
     <div class="title">
-        <a href="https://news.mit.edu/2025/envisioning-future-where-health-care-tech-leaves-some-behind-0609" target="_blank">Envisioning a future where health care tech leaves some behind</a>
-        <span class="source-tag">mit_news</span>
+        <a href="https://venturebeat.com/games/qualcomm-shares-its-vision-for-the-future-of-smart-glasses-with-on-glass-gen-ai/" target="_blank">Qualcomm shares its vision for the future of smart glasses with on-glass Gen AI</a>
+        <span class="source-tag">venturebeat</span>
     </div>
-    <div class="article-image">
-        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202505/mit-SERC-prize.jpg?itok=GRUdkC44" alt="Envisioning a future where health care tech leaves some behind" loading="lazy">
-    </div>
-    <div class="summary">The winning essay of the Envisioning the Future of Computing Prize highlights the potential for AI-driven health care technologies to exacerbate existing health care disparities.</div>
-    <div class="published">Published: June 09, 2025</div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Business</span></div>
+    <div class="summary">Qualcomm showcased generative AI-powered smart glasses at the Augmented World Expo, featuring its new Snapdragon AR1+ Gen 1 processor for on-device AI processing.</div>
+    <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="technology gadgets">
+    <div class="title">
+        <a href="https://www.engadget.com/wearables/qualcomm-says-its-new-ar1-gen-1-chip-can-handle-ai-directly-on-smart-glasses-163002410.html?src=rss" target="_blank">Qualcomm says its new AR1+ Gen 1 chip can handle AI directly on smart glasses</a>
+        <span class="source-tag">engadget</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Gadgets</span></div>
+    <div class="article-image">
+        <img src="https://o.aolcdn.com/images/dims?image_uri=https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2025-06%2F6d5a6020-45b2-11f0-9bfd-18a9d8be11c6&resize=1400%2C787&client=19f2b5e49a271b2bde77&signature=390b249ccc7a1d09e89427e991449e8d2a9c52a5" alt="Qualcomm says its new AR1+ Gen 1 chip can handle AI directly on smart glasses" loading="lazy">
+    </div>
+    <div class="summary">Qualcomm's new Snapdragon AR1+ Gen 1 chip enables AI processing directly on smart glasses without needing a smartphone or cloud connection, while also being 28% smaller than its predecessor.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="tech news business">
+    <div class="title">
+        <a href="https://venturebeat.com/ai/vantas-ai-agent-wants-to-run-your-compliance-program-and-it-just-might/" target="_blank">Vanta’s AI agent wants to run your compliance program — and it just might</a>
+        <span class="source-tag">venturebeat</span>
+    </div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Business</span></div>
+    <div class="summary">Vanta has introduced an autonomous AI agent for managing security and compliance workflows, marking a shift towards AI as a proactive partner in governance, risk, and compliance programs.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology research">
     <div class="title">
         <a href="https://news.mit.edu/2025/coactive-helps-machines-understand-visual-content-ai-0609" target="_blank">Helping machines understand visual content with AI</a>
         <span class="source-tag">mit_news</span>
     </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Research</span></div>
     <div class="article-image">
         <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202506/MIT-Coactive-AI-01-press.jpg?itok=YBc2evUx" alt="Helping machines understand visual content with AI" loading="lazy">
     </div>
     <div class="summary">Coactive, founded by MIT alumni, has developed an AI-powered platform designed to extract new insights from various types of content, including video.</div>
     <div class="published">Published: June 09, 2025</div>
 </div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.theverge.com/policy/683596/cafe-fuel-economy-usdot-nhtsa-ev-duffy-republican" target="_blank">Republicans are determined to make you pay more for gas</a>
-        <span class="source-tag">the_verge</span>
-    </div>
-    <div class="summary">The U.S. Transportation Secretary has announced a reset of the Corporate Average Fuel Economy (CAFE) standards, which may lead to increased fuel costs for consumers.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.theverge.com/news/684418/sag-aftra-video-game-actors-strike-agreement" target="_blank">The video game actors&#8217; strike may be over soon</a>
-        <span class="source-tag">the_verge</span>
-    </div>
-    <div class="summary">The Screen Actors Guild has reached a tentative contract agreement with major gaming companies, potentially ending an 11-month strike by video game actors over AI protections.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.theverge.com/games/684247/xbox-ally-x-hands-on-gears-of-war-reloaded" target="_blank">Xbox&#8217;s new handheld is a surprisingly comfortable way to play Gears</a>
-        <span class="source-tag">the_verge</span>
-    </div>
-    <div class="summary">Xbox has introduced the Ally X handheld gaming device, developed in partnership with Asus, which is noted for its comfort during gameplay.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.theverge.com/news/684313/microsoft-build-conference-2026-location" target="_blank">Microsoft is moving its Build conference out of Seattle for 2026</a>
-        <span class="source-tag">the_verge</span>
-    </div>
-    <div class="summary">Microsoft is relocating its Build developer conference from Seattle for 2026, having canceled all future reservations at the Seattle convention center.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.theverge.com/hands-on/684170/vanmoofs-new-s6-e-bikes-fix-everything-but-trust" target="_blank">VanMoof’s new S6 e-bikes fix everything but trust</a>
-        <span class="source-tag">the_verge</span>
-    </div>
-    <div class="summary">VanMoof's new S6 e-bikes, launched after the company's bankruptcy, show significant improvements but still face challenges regarding consumer trust.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.theverge.com/ipad/684229/ipados-26-hands-on-multitasking-mac" target="_blank">Hang on, did the iPad just become a computer?</a>
-        <span class="source-tag">the_verge</span>
-    </div>
-    <div class="summary">With the release of iPadOS 26, Apple has significantly enhanced multitasking capabilities on the iPad, bringing it closer to functioning like a computer.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.theverge.com/news/684199/splatoon-raiders-switch-2-spinoff" target="_blank">Splatoon is getting a Switch 2 spinoff, and a big Splatoon 3 update</a>
-        <span class="source-tag">the_verge</span>
-    </div>
-    <div class="summary">Nintendo announced a new spinoff game called Splatoon Raiders for the Switch 2, along with a major update for Splatoon 3, featuring new gameplay elements and a mystery to solve.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.theverge.com/games/682063/the-new-york-times-nyt-games-crossplay-scrabble-pips" target="_blank">The New York Times is starting to test its take on Scrabble</a>
-        <span class="source-tag">the_verge</span>
-    </div>
-    <div class="summary">The New York Times is testing a standalone Scrabble-like game called Crossplay, which is set to soft launch in New Zealand on June 10, 2025.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-</div>
-<div class="category-section">
-    <h2 class="category-title">Physics (8 articles)</h2>
-    
-<div class="article">
-    <div class="title">
-        <a href="https://phys.org/news/2025-06-nasa-tropics-mission-images-analysis.html" target="_blank">NASA's TROPICS mission: Offering detailed images and analysis of tropical cyclones</a>
-        <span class="source-tag">phys_org</span>
-    </div>
-    <div class="article-image">
-        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/nasas-tropics-mission.jpg" alt="NASA's TROPICS mission: Offering detailed images and analysis of tropical cyclones" loading="lazy">
-    </div>
-    <div class="summary">NASA's TROPICS mission provides detailed imagery and analysis of tropical cyclones to enhance forecasting and understanding of storm dynamics.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://phys.org/news/2025-06-migration-minimum-income-family-life.html" target="_blank">Migration minimum income rules damaging family life and causing acute distress, experts warn</a>
-        <span class="source-tag">phys_org</span>
-    </div>
-    <div class="article-image">
-        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/family-shoes.jpg" alt="Migration minimum income rules damaging family life and causing acute distress, experts warn" loading="lazy">
-    </div>
-    <div class="summary">Experts warn that minimum income rules for foreign spouses in the UK are causing family separations and distress, leading to increased workloads for the Home Office.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://phys.org/news/2025-06-terracotta-pieces-ideas-carpetania-role.html" target="_blank">Decorative terracotta pieces challenge existing ideas on Carpetania's role in Mediterranean globalization</a>
-        <span class="source-tag">phys_org</span>
-    </div>
-    <div class="article-image">
-        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/decorative-terracotta.jpg" alt="Decorative terracotta pieces challenge existing ideas on Carpetania's role in Mediterranean globalization" loading="lazy">
-    </div>
-    <div class="summary">Recent research challenges the perception of Carpetania as a passive cultural entity in the Late Iron Age, suggesting it played a more active role in Mediterranean globalization.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://phys.org/news/2025-06-digital-twins-reveal-math-disabilities.html" target="_blank">Digital twins reveal how math disabilities affect the brain</a>
-        <span class="source-tag">phys_org</span>
-    </div>
-    <div class="article-image">
-        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/digital-twins-reveal-h.jpg" alt="Digital twins reveal how math disabilities affect the brain" loading="lazy">
-    </div>
-    <div class="summary">Researchers at Stanford University have developed "digital twins" using AI and brain scans to investigate the neural basis of math learning disabilities.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://phys.org/news/2025-06-machine-ease-jitters-high-power.html" target="_blank">Machine learning helps ease the jitters of high-power lasers</a>
-        <span class="source-tag">phys_org</span>
-    </div>
-    <div class="article-image">
-        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/machine-learning-helps-2.jpg" alt="Machine learning helps ease the jitters of high-power lasers" loading="lazy">
-    </div>
-    <div class="summary">Scientists at Lawrence Berkeley National Laboratory have utilized machine learning to stabilize the pointing of high-power lasers, improving their precision for experiments.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://phys.org/news/2025-06-cosmic-colossal-galaxy-cluster.html" target="_blank">Record-breaking cosmic structure discovered in colossal galaxy cluster</a>
-        <span class="source-tag">phys_org</span>
-    </div>
-    <div class="article-image">
-        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/record-breaking-cosmic.jpg" alt="Record-breaking cosmic structure discovered in colossal galaxy cluster" loading="lazy">
-    </div>
-    <div class="summary">Astronomers have discovered a record-breaking cosmic structure in the galaxy cluster PLCK G287.0+32.9, located about 5 billion light-years from Earth.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://phys.org/news/2025-06-ten-rocket-ozone-layer.html" target="_blank">A ten-fold increase in rocket launches would start harming the ozone layer, new research finds</a>
-        <span class="source-tag">phys_org</span>
-    </div>
-    <div class="article-image">
-        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/a-ten-fold-increase-in.jpg" alt="A ten-fold increase in rocket launches would start harming the ozone layer, new research finds" loading="lazy">
-    </div>
-    <div class="summary">New research indicates that a ten-fold increase in rocket launches could begin to harm the ozone layer.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://phys.org/news/2025-06-chip-photonic-qubit-enables-gkp.html" target="_blank">First on-chip photonic qubit enables GKP states for error correction at room temperature</a>
-        <span class="source-tag">phys_org</span>
-    </div>
-    <div class="article-image">
-        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/xanadu-unveils-first-o.jpg" alt="First on-chip photonic qubit enables GKP states for error correction at room temperature" loading="lazy">
-    </div>
-    <div class="summary">Xanadu Quantum Technologies has successfully generated error-resistant photonic qubits on an integrated chip, marking a significant advancement in scalable quantum hardware.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-</div>
-<div class="category-section">
-    <h2 class="category-title">Science (10 articles)</h2>
-    
-<div class="article">
-    <div class="title">
-        <a href="https://www.sciencedaily.com/releases/2025/06/250610080025.htm" target="_blank">What a dinosaur ate 100 million years ago—Preserved in a fossilized time capsule</a>
-        <span class="source-tag">science_daily</span>
-    </div>
-    <div class="summary">Researchers have found preserved gut contents from a sauropod dinosaur, providing direct evidence of its diet and confirming hypotheses about its ecological role.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.sciencedaily.com/releases/2025/06/250610074307.htm" target="_blank">Scientists uncover why "stealth" volcanoes stay silent until eruption</a>
-        <span class="source-tag">science_daily</span>
-    </div>
-    <div class="summary">A study has identified key internal conditions that allow "stealth" volcanoes to erupt with little or no detectable precursors, increasing risks to nearby populations.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.sciencedaily.com/releases/2025/06/250610074301.htm" target="_blank">Sharper than lightning: Oxford’s one-in-6. 7-million quantum breakthrough</a>
-        <span class="source-tag">science_daily</span>
-    </div>
-    <div class="summary">Oxford researchers have achieved the most accurate qubit operation ever recorded, significantly reducing error rates in quantum logic gates, which is a crucial step towards practical quantum computing.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.sciencedaily.com/releases/2025/06/250610074256.htm" target="_blank">Sun unleashes monster solar storm: Rare G4 alert issued for earth</a>
-        <span class="source-tag">science_daily</span>
-    </div>
-    <div class="summary">A powerful Coronal Mass Ejection from the Sun has prompted a G4 geomagnetic storm alert for Earth, with the event observed to have an apparent velocity exceeding 1,700 kilometers per second.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.sciencedaily.com/releases/2025/06/250610074247.htm" target="_blank">New discovery: Tylenol stops pain at the nerves, before it hits the brain</a>
-        <span class="source-tag">science_daily</span>
-    </div>
-    <div class="summary">A study from the Hebrew University of Jerusalem has discovered that acetaminophen (Tylenol) relieves pain by acting on peripheral nerves, rather than solely in the brain and spinal cord.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.sciencedaily.com/releases/2025/06/250610004101.htm" target="_blank">This overlooked supplement could help you think sharper and age better</a>
-        <span class="source-tag">science_daily</span>
-    </div>
-    <div class="summary">Research indicates that creatine, a compound essential for cellular energy, may provide protective health benefits beyond exercise performance, with recommendations for daily intake ranging from two to four grams.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.sciencedaily.com/releases/2025/06/250610004057.htm" target="_blank">2,000 miles through rivers and ice: Mapping neanderthals’ hidden superhighways across eurasia</a>
-        <span class="source-tag">science_daily</span>
-    </div>
-    <div class="summary">Anthropologists have mapped potential pathways used by Neanderthals, suggesting they traveled approximately 2,000 miles across northern Eurasia using river valleys as natural highways during warmer periods.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.sciencedaily.com/releases/2025/06/250610004054.htm" target="_blank">How madagascar’s lizards became the island’s last hope for reforestation</a>
-        <span class="source-tag">science_daily</span>
-    </div>
-    <div class="summary">Researchers at Kyoto University have highlighted the significant role of lizards as under-appreciated seed dispersers in forest ecosystems, particularly through the process of endozoochory.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.sciencedaily.com/releases/2025/06/250610004050.htm" target="_blank">Scientists reveal the hidden pause that keeps bee colonies alive</a>
-        <span class="source-tag">science_daily</span>
-    </div>
-    <div class="summary">A study found that bumblebee queens exhibit a pattern of egg-laying followed by periods of inactivity, which are crucial for the successful establishment of their colonies.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.sciencedaily.com/releases/2025/06/250610004044.htm" target="_blank">Scientists may have spotted a giant new planet forming</a>
-        <span class="source-tag">science_daily</span>
-    </div>
-    <div class="summary">Scientists using the Very Large Telescope in Chile have captured images of a structured disk around a young star, indicating the potential formation of a giant new planet.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-</div>
-<div class="category-section">
-    <h2 class="category-title">AI & Tech (16 articles)</h2>
-    
-<div class="article">
-    <div class="title">
-        <a href="https://techcrunch.com/2025/06/10/apples-upgraded-ai-models-underwhelm-on-performance/" target="_blank">Apple’s upgraded AI models underwhelm on performance</a>
-        <span class="source-tag">techcrunch_ai</span>
-    </div>
-    <div class="summary">Apple's newly updated AI models have been found to underperform compared to older models from rival companies, according to the company's own benchmarks.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://techcrunch.com/2025/06/10/enterprise-ai-startup-glean-lands-a-7-2b-valuation/" target="_blank">Enterprise AI startup Glean lands a $7.2B valuation</a>
-        <span class="source-tag">techcrunch_ai</span>
-    </div>
-    <div class="summary">Enterprise AI startup Glean has achieved a $7.2 billion valuation after raising $150 million in a Series F funding round, significantly increasing its valuation from $4.6 billion less than a year prior.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://techcrunch.com/2025/06/10/at-wwdc-2025-apple-sang-developers-praises-amid-ai-letdowns-and-app-store-battles/" target="_blank">At WWDC 2025, Apple sang developers’ praises amid AI letdowns and App Store battles</a>
-        <span class="source-tag">techcrunch_ai</span>
-    </div>
-    <div class="summary">During WWDC 2025, Apple celebrated app developers with a musical performance but did not address ongoing challenges and criticisms related to its App Store practices.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://techcrunch.com/2025/06/10/report-meta-taps-scale-ais-alexandr-wang-to-join-new-superintelligence-lab/" target="_blank">Report: Meta taps Scale AI’s Alexandr Wang to join new ‘superintelligence’ lab</a>
-        <span class="source-tag">techcrunch_ai</span>
-    </div>
-    <div class="summary">Meta is establishing a new AI research lab focused on "superintelligence" and has recruited Alexandr Wang, founder of Scale AI, to lead the initiative amid efforts to enhance its AI capabilities.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
+<div class="article" data-tags="ai tech news">
     <div class="title">
         <a href="https://techcrunch.com/2025/06/10/chatgpt-is-having-a-partial-outage/" target="_blank">ChatGPT is having a partial outage</a>
         <span class="source-tag">techcrunch_ai</span>
     </div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Tech News</span></div>
     <div class="summary">OpenAI experienced a partial outage affecting access to ChatGPT and its API, which persisted for several hours on Tuesday morning.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="hardware diy">
     <div class="title">
-        <a href="https://techcrunch.com/2025/06/10/mistral-releases-a-pair-of-ai-reasoning-models/" target="_blank">Mistral releases a pair of AI reasoning models</a>
-        <span class="source-tag">techcrunch_ai</span>
+        <a href="https://hackaday.com/2025/06/10/is-the-atomic-outboard-an-idea-whose-time-has-come/" target="_blank">Is The Atomic Outboard An Idea Whose Time Has Come?</a>
+        <span class="source-tag">hackaday</span>
     </div>
-    <div class="summary">Mistral launched its first family of reasoning AI models, called Magistral, which includes two versions designed for improved problem-solving across various topics.</div>
+    <div class="tag-list"><span class="tag">Hardware</span><span class="tag">DIY</span></div>
+    <div class="article-image">
+        <img src="https://hackaday.com/wp-content/uploads/2025/06/nukeship_feat.jpg" alt="Is The Atomic Outboard An Idea Whose Time Has Come?" loading="lazy">
+    </div>
+    <div class="summary">The concept of an atomic outboard motor, originally proposed by General Electric in the 1950s, is being revisited as part of the discussion around Small Modular Reactors (SMRs) in nuclear power.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="technology gadgets">
     <div class="title">
-        <a href="https://techcrunch.com/2025/06/10/googles-ai-overviews-are-killing-traffic-for-publishers/" target="_blank">Google’s AI search features are killing traffic to publishers</a>
-        <span class="source-tag">techcrunch_ai</span>
+        <a href="https://www.engadget.com/audio/headphones/sonos-ace-headphones-get-long-awaited-truecinema-sound-and-more-in-big-update-163012056.html?src=rss" target="_blank">Sonos Ace headphones get long-awaited TrueCinema sound and more in big update</a>
+        <span class="source-tag">engadget</span>
     </div>
-    <div class="summary">Google's AI search features, including AI Overviews and chatbots, are significantly reducing traffic to news publishers by providing answers without directing users to external sites.</div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Gadgets</span></div>
+    <div class="article-image">
+        <img src="https://o.aolcdn.com/images/dims?image_uri=https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2024-06%2F07a1da51-2151-11ef-9fef-a9b0c67d7d96&resize=1400%2C933&client=19f2b5e49a271b2bde77&signature=69178dbdbea58ddb35389b1c3cd5d26b4d468a7a" alt="Sonos Ace headphones get long-awaited TrueCinema sound and more in big update" loading="lazy">
+    </div>
+    <div class="summary">Sonos has released a software update for its Ace headphones that introduces the TrueCinema feature, enhancing spatial sound accuracy by measuring room acoustics with a compatible Sonos soundbar.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="science research">
     <div class="title">
-        <a href="https://techcrunch.com/2025/06/09/still-no-ai-powered-more-personalized-siri-from-apple-at-wwdc-25/" target="_blank">Still no AI-powered, ‘more personalized’ Siri from Apple at WWDC 25</a>
-        <span class="source-tag">techcrunch_ai</span>
+        <a href="https://www.sciencedaily.com/releases/2025/06/250610074307.htm" target="_blank">Scientists uncover why "stealth" volcanoes stay silent until eruption</a>
+        <span class="source-tag">science_daily</span>
     </div>
-    <div class="summary">Apple announced at WWDC 25 that updates for a more personalized, AI-powered Siri will be delayed until at least 2026.</div>
+    <div class="tag-list"><span class="tag">Science</span><span class="tag">Research</span></div>
+    <div class="summary">A study has identified key internal conditions that allow "stealth" volcanoes to erupt with little or no detectable precursors, increasing risks to nearby populations.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology research">
+    <div class="title">
+        <a href="https://news.mit.edu/2025/universal-nanosensor-unlocks-plant-growth-secrets-0609" target="_blank">Universal nanosensor unlocks the secrets to plant growth</a>
+        <span class="source-tag">mit_news</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Research</span></div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202505/smart-distap.jpg?itok=aOnFgEyr" alt="Universal nanosensor unlocks the secrets to plant growth" loading="lazy">
+    </div>
+    <div class="summary">Researchers from SMART DiSTAP developed a near-infrared fluorescent nanosensor that can monitor the primary plant growth hormone, indole-3-acetic acid, in real-time without harming the plant.</div>
     <div class="published">Published: June 09, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="economics research">
     <div class="title">
-        <a href="https://techcrunch.com/2025/06/09/openai-claims-to-have-hit-10b-in-annual-revenue/" target="_blank">OpenAI claims to have hit $10B in annual revenue</a>
-        <span class="source-tag">techcrunch_ai</span>
+        <a href="https://news.mit.edu/2025/sweet-taste-new-idea-sendhil-mullainathan-0519" target="_blank">The sweet taste of a new idea</a>
+        <span class="source-tag">mit_economics</span>
     </div>
-    <div class="summary">OpenAI reported reaching $10 billion in annual recurring revenue, significantly up from $5.5 billion the previous year, driven by its consumer products and API services.</div>
-    <div class="published">Published: June 09, 2025</div>
+    <div class="tag-list"><span class="tag">Economics</span><span class="tag">Research</span></div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202505/mit-sendhil-Mullainathan.jpg?itok=cpAlOxqi" alt="The sweet taste of a new idea" loading="lazy">
+    </div>
+    <div class="summary">Behavioral economist Sendhil Mullainathan emphasizes the importance of integrating computer science and behavioral economics in his research at MIT.</div>
+    <div class="published">Published: May 19, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="tech news discussion">
     <div class="title">
-        <a href="https://techcrunch.com/2025/06/09/from-spatial-widgets-to-realistic-personas-all-the-visionos-updates-apple-announced-at-wwdc/" target="_blank">From spatial widgets to realistic Personas: All the visionOS updates Apple announced at WWDC</a>
-        <span class="source-tag">techcrunch_ai</span>
+        <a href="https://arxiv.org/abs/2506.07330" target="_blank">JavelinGuard: Low-Cost Transformer Architectures for LLM Security</a>
+        <span class="source-tag">hacker_news</span>
     </div>
-    <div class="summary">Apple introduced updates to visionOS 26, enhancing its mixed reality headset with customizable spatial widgets that integrate digital content into users' physical environments.</div>
-    <div class="published">Published: June 09, 2025</div>
-</div>
-<div class="article">
-    <div class="title">
-        <a href="https://www.artificialintelligence-news.com/news/magistral-mistral-ai-challenges-big-tech-reasoning-model/" target="_blank">Magistral: Mistral AI challenges big tech with reasoning model</a>
-        <span class="source-tag">ai_news</span>
-    </div>
-    <div class="summary">Mistral AI has launched its reasoning model called Magistral, available in both an open-source version and a commercial edition.</div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Discussion</span></div>
+    <div class="summary">JavelinGuard is a suite of low-cost transformer architectures designed to detect malicious intent in Large Language Model interactions, achieving high accuracy with approximately 400M parameters.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="technology in-depth">
     <div class="title">
-        <a href="https://www.artificialintelligence-news.com/news/the-ai-blockchain-what-is-it-really/" target="_blank">The AI blockchain: What is it really?</a>
-        <span class="source-tag">ai_news</span>
+        <a href="https://arstechnica.com/ai/2025/06/anthropic-releases-custom-ai-chatbot-for-classified-spy-work/" target="_blank">Anthropic releases custom AI chatbot for classified spy work</a>
+        <span class="source-tag">ars_technica</span>
     </div>
-    <div class="summary">The article discusses the implications of decentralization in AI infrastructure, drawing parallels with the lessons learned from cryptocurrencies.</div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">In-depth</span></div>
+    <div class="article-image">
+        <img src="https://cdn.arstechnica.net/wp-content/uploads/2025/06/claude_gov.jpg" alt="Anthropic releases custom AI chatbot for classified spy work" loading="lazy">
+    </div>
+    <div class="summary">Anthropic has released specialized AI models called "Claude Gov" for US national security clients, designed to handle classified operations and improve proficiency in critical languages.</div>
+    <div class="published">Published: June 06, 2025</div>
+</div>
+<div class="article" data-tags="tech news business">
+    <div class="title">
+        <a href="https://venturebeat.com/business/powerz-is-launching-today-on-mobile-as-a-magical-learning-game-for-kids/" target="_blank">PowerZ is launching today on mobile as a magical learning game for kids</a>
+        <span class="source-tag">venturebeat</span>
+    </div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Business</span></div>
+    <div class="summary">PowerZ: New WorldZ, a free-to-play mobile game for kids that combines learning and adventure, has launched on iOS and Android.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="technology tech news">
+    <div class="title">
+        <a href="https://www.theverge.com/news/684418/sag-aftra-video-game-actors-strike-agreement" target="_blank">The video game actors&#8217; strike may be over soon</a>
+        <span class="source-tag">the_verge</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Tech News</span></div>
+    <div class="summary">The Screen Actors Guild has reached a tentative contract agreement with major gaming companies, potentially ending an 11-month strike by video game actors over AI protections.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology gadgets">
+    <div class="title">
+        <a href="https://www.engadget.com/ai/openai-will-reportedly-start-using-googles-cloud-servers-162311068.html?src=rss" target="_blank">OpenAI will reportedly start using Google's cloud servers</a>
+        <span class="source-tag">engadget</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Gadgets</span></div>
+    <div class="article-image">
+        <img src="https://o.aolcdn.com/images/dims?image_uri=https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2025-06%2Fdb74f930-4611-11f0-affe-41e9a59b62e4&resize=1400%2C742&client=19f2b5e49a271b2bde77&signature=646056d63c91414c808a7a13fc8cd9e63bee1ece" alt="OpenAI will reportedly start using Google's cloud servers" loading="lazy">
+    </div>
+    <div class="summary">OpenAI has signed a deal to use Google's cloud servers to enhance its computing capacity, moving away from exclusive reliance on Microsoft Azure.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology in-depth">
+    <div class="title">
+        <a href="https://arstechnica.com/security/2025/06/millions-of-low-cost-android-devices-turn-home-networks-into-crime-platforms/" target="_blank">Millions of low-cost Android devices turn home networks into crime platforms</a>
+        <span class="source-tag">ars_technica</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">In-depth</span></div>
+    <div class="article-image">
+        <img src="https://cdn.arstechnica.net/wp-content/uploads/2025/06/infected-tv-1152x648.jpg" alt="Millions of low-cost Android devices turn home networks into crime platforms" loading="lazy">
+    </div>
+    <div class="summary">The FBI warns that millions of low-cost Android devices are infected with the BadBox malware, which turns home networks into platforms for illicit activities.</div>
+    <div class="published">Published: June 06, 2025</div>
+</div>
+<div class="article" data-tags="technology research">
+    <div class="title">
+        <a href="https://news.mit.edu/2025/each-of-us-holds-piece-of-the-solution-0610" target="_blank">“Each of us holds a piece of the solution”</a>
+        <span class="source-tag">mit_news</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Research</span></div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202505/mit-climate-project-gathering.jpg?itok=HwBV_LDK" alt="“Each of us holds a piece of the solution”" loading="lazy">
+    </div>
+    <div class="summary">A community gathering at MIT, led by Vice President for Energy and Climate Evelyn Wang, focused on the Climate Project and encouraged collaboration among students, faculty, and staff to address climate challenges.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="gaming">
+    <div class="title">
+        <a href="https://www.pcgamer.com/hardware/gaming-mice/us-peripheral-maker-cites-global-supply-chain-issues-as-the-reason-for-releasing-its-new-gaming-mouse-everywhere-except-the-us/" target="_blank">US peripheral maker cites 'global supply chain issues' as the reason for releasing its new gaming mouse everywhere except the US</a>
+        <span class="source-tag">pcgamer</span>
+    </div>
+    <div class="tag-list"><span class="tag">Gaming</span></div>
+    <div class="article-image">
+        <img src="https://cdn.mos.cms.futurecdn.net/dVmKNcYgUpGENgz2vPqdyY.jpg" alt="US peripheral maker cites 'global supply chain issues' as the reason for releasing its new gaming mouse everywhere except the US" loading="lazy">
+    </div>
+    <div class="summary">Glorious has released its new gaming mouse, the Model O Eternal, globally except in the US due to ongoing global supply chain issues.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="economics research">
+    <div class="title">
+        <a href="https://news.mit.edu/2025/stanley-fischer-towering-figure-economics-dies-0603" target="_blank">Professor Emeritus Stanley Fischer, a towering figure in academic macroeconomics and global economic policymaking, dies at 81</a>
+        <span class="source-tag">mit_economics</span>
+    </div>
+    <div class="tag-list"><span class="tag">Economics</span><span class="tag">Research</span></div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202506/mit-stanley-fischer-obit.jpg?itok=70DrZnKc" alt="Professor Emeritus Stanley Fischer, a towering figure in academic macroeconomics and global economic policymaking, dies at 81" loading="lazy">
+    </div>
+    <div class="summary">Stanley Fischer, a prominent MIT economist and former vice chair of the U.S. Federal Reserve, passed away at the age of 81, leaving a significant impact on macroeconomics and global economic policy.</div>
+    <div class="published">Published: June 03, 2025</div>
+</div>
+<div class="article" data-tags="technology gadgets">
+    <div class="title">
+        <a href="https://www.engadget.com/mobile/smartphones/engadget-podcast-breaking-down-the-highlights-of-wwdc-2025-023505128.html?src=rss" target="_blank">Engadget Podcast: Breaking down the highlights of WWDC 2025</a>
+        <span class="source-tag">engadget</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Gadgets</span></div>
+    <div class="article-image">
+        <img src="https://o.aolcdn.com/images/dims?image_uri=https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2025-06%2F3c5a4570-4612-11f0-bc67-d24a449b8b44&resize=1400%2C785&client=19f2b5e49a271b2bde77&signature=34060c46188a1764c03f6f1b2ca1830f031ed40a" alt="Engadget Podcast: Breaking down the highlights of WWDC 2025" loading="lazy">
+    </div>
+    <div class="summary">The Engadget Podcast discusses the highlights of Apple's WWDC 2025, noting that the announcements felt more significant compared to previous years.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="physics science">
+    <div class="title">
+        <a href="https://phys.org/news/2025-06-genome-precision-human-gene.html" target="_blank">Genome engineers expand the reach and precision of human gene editing</a>
+        <span class="source-tag">phys_org</span>
+    </div>
+    <div class="tag-list"><span class="tag">Physics</span><span class="tag">Science</span></div>
+    <div class="article-image">
+        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/genome-engineers-expan.jpg" alt="Genome engineers expand the reach and precision of human gene editing" loading="lazy">
+    </div>
+    <div class="summary">Advances in genome editing technology have enabled researchers to enhance the precision and capability of altering multiple locations in the human genome simultaneously.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology in-depth">
+    <div class="title">
+        <a href="https://arstechnica.com/information-technology/2025/06/faa-to-retire-floppy-disks-and-windows-95-amid-air-traffic-control-overhaul/" target="_blank">US air traffic control still runs on Windows 95 and floppy disks</a>
+        <span class="source-tag">ars_technica</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">In-depth</span></div>
+    <div class="article-image">
+        <img src="https://cdn.arstechnica.net/wp-content/uploads/2022/10/air-traffic-1000x648.jpg" alt="US air traffic control still runs on Windows 95 and floppy disks" loading="lazy">
+    </div>
+    <div class="summary">The FAA plans to replace its outdated air traffic control systems, which currently rely on Windows 95 and floppy disks, as part of a significant infrastructure overhaul.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article" data-tags="ai tech news">
     <div class="title">
         <a href="https://www.artificialintelligence-news.com/news/apple-opens-core-ai-model-to-developers-amid-measured-wwdc-strategy/" target="_blank">Apple opens core AI model to developers amid measured WWDC strategy</a>
         <span class="source-tag">ai_news</span>
     </div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Tech News</span></div>
     <div class="summary">Apple has made its foundational AI model accessible to third-party developers for the first time, marking a shift in its approach to AI tools.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="tech news discussion">
     <div class="title">
-        <a href="https://www.artificialintelligence-news.com/news/reddit-sues-anthropic-for-scraping-user-data-to-train-ai/" target="_blank">Reddit sues Anthropic for scraping user data to train AI</a>
-        <span class="source-tag">ai_news</span>
+        <a href="https://codeanlabs.com/blog/research/cve-2025-47934-spoofing-openpgp-js-signatures/" target="_blank">Spoofing OpenPGP.js signature verification</a>
+        <span class="source-tag">hn_official</span>
     </div>
-    <div class="summary">Reddit has filed a lawsuit against Anthropic for allegedly scraping user data without permission to train its AI models.</div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Discussion</span></div>
+    <div class="summary">A vulnerability has been identified that allows for spoofing of OpenPGP.js signature verification.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="tech news discussion">
     <div class="title">
-        <a href="https://www.artificialintelligence-news.com/news/ai-chip-demand-tsmc-supply-shortage-2025/" target="_blank">TSMC reports record AI chip demand amid Trump tariff uncertainty</a>
-        <span class="source-tag">ai_news</span>
+        <a href="https://connorjaydunn.github.io/blog/posts/denuvo-analysis/" target="_blank">Denuvo Analysis</a>
+        <span class="source-tag">hn_official</span>
     </div>
-    <div class="summary">TSMC is experiencing record demand for AI chips but is struggling to meet this demand due to trade tensions and geopolitical risks affecting the semiconductor supply chain.</div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Discussion</span></div>
+    <div class="summary">Denuvo is a sophisticated digital rights management system that utilizes unique techniques to protect digital media from piracy and reverse engineering.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article" data-tags="ai tech news">
+    <div class="title">
+        <a href="https://techcrunch.com/2025/06/10/apples-upgraded-ai-models-underwhelm-on-performance/" target="_blank">Apple’s upgraded AI models underwhelm on performance</a>
+        <span class="source-tag">techcrunch_ai</span>
+    </div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Tech News</span></div>
+    <div class="summary">Apple's newly updated AI models have been found to underperform compared to older models from rival companies, according to the company's own benchmarks.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="technology gadgets">
     <div class="title">
-        <a href="https://www.artificialintelligence-news.com/news/openai-south-korea-expansion-strategy/" target="_blank">OpenAI’s second largest paying market gets its own office: The South Korean story</a>
-        <span class="source-tag">ai_news</span>
+        <a href="https://gizmodo.com/sandisk-2tb-extreme-portable-ssd-hits-all-time-new-low-price-backed-by-4-6-stars-and-nearly-80k-reviews-2000613466" target="_blank">SanDisk 2TB Extreme Portable SSD Hits All-Time New Low Price, Backed by 4.6-Stars and Nearly 80K Reviews</a>
+        <span class="source-tag">gizmodo</span>
     </div>
-    <div class="summary">OpenAI has established an office in South Korea following an eleven-fold increase in ChatGPT's user base, making it the company's second largest paying market.</div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Gadgets</span></div>
+    <div class="article-image">
+        <img src="https://gizmodo.com/app/uploads/2025/06/sandisk2tb.jpg" alt="SanDisk 2TB Extreme Portable SSD Hits All-Time New Low Price, Backed by 4.6-Stars and Nearly 80K Reviews" loading="lazy">
+    </div>
+    <div class="summary">The SanDisk 2TB Extreme Portable SSD is currently available for $145, marking a 31% discount from its usual price of $210.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-</div>
-<div class="category-section">
-    <h2 class="category-title">Entertainment (3 articles)</h2>
-    
-<div class="article">
+<div class="article" data-tags="gaming">
     <div class="title">
-        <a href="https://www.hollywoodreporter.com/movies/movie-news/jim-sheridan-recreation-unsolved-irish-murder-on-trial-1236259792/" target="_blank">Jim Sheridan’s ‘Re-creation’ Puts One of Ireland’s Most Troubling Murder Cases Back on Trial</a>
-        <span class="source-tag">hollywood_reporter</span>
+        <a href="https://www.pcgamer.com/games/rpg/i-couldnt-picture-how-death-howl-a-soulslike-deckbuilder-could-possibly-marry-the-two-genres-until-i-played-its-steam-next-fest-demo/" target="_blank">I couldn't picture how Death Howl, a soulslike deckbuilder, could possibly marry the two genres—until I played its Steam Next Fest demo</a>
+        <span class="source-tag">pcgamer</span>
     </div>
-    <div class="summary">Jim Sheridan's film "Re-creation" revisits a controversial murder case in Ireland, reflecting his long-standing interest in the theme of the falsely accused.</div>
+    <div class="tag-list"><span class="tag">Gaming</span></div>
+    <div class="article-image">
+        <img src="https://cdn.mos.cms.futurecdn.net/hQ3cfHMAH7EJjbCXHagawj.png" alt="I couldn't picture how Death Howl, a soulslike deckbuilder, could possibly marry the two genres—until I played its Steam Next Fest demo" loading="lazy">
+    </div>
+    <div class="summary">The demo for Death Howl successfully combines soulslike gameplay with deckbuilding mechanics, allowing players to explore a spirit world while utilizing strategic card synergies.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="technology research">
     <div class="title">
-        <a href="https://www.hollywoodreporter.com/movies/movie-reviews/inside-review-guy-pearce-cosmo-jarvis-1236260361/" target="_blank">‘Inside’ Review: Guy Pearce Is a Lit Fuse of Internal Contradictions in Haunting Australian Prison Drama</a>
-        <span class="source-tag">hollywood_reporter</span>
+        <a href="https://news.mit.edu/2025/envisioning-future-where-health-care-tech-leaves-some-behind-0609" target="_blank">Envisioning a future where health care tech leaves some behind</a>
+        <span class="source-tag">mit_news</span>
     </div>
-    <div class="summary">The film "Inside," featuring Guy Pearce, explores the complexities of inherited trauma within the prison system through the stories of three convicted felons.</div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Research</span></div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202506/Annaliese%20statue%20crop.jpg?itok=tb-rkzoF" alt="Envisioning a future where health care tech leaves some behind" loading="lazy">
+    </div>
+    <div class="summary">The winning essay of the Envisioning the Future of Computing Prize emphasizes the importance of addressing health care disparities as technology evolves.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article" data-tags="technology gadgets">
+    <div class="title">
+        <a href="https://gizmodo.com/dogma-was-just-one-of-many-angel-themed-millennial-movies-2000613606" target="_blank">‘Dogma’ Was Just One of Many Angel-Themed Millennial Movies</a>
+        <span class="source-tag">gizmodo</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Gadgets</span></div>
+    <div class="article-image">
+        <img src="https://gizmodo.com/app/uploads/2025/06/cityofangels-2.jpg" alt="‘Dogma’ Was Just One of Many Angel-Themed Millennial Movies" loading="lazy">
+    </div>
+    <div class="summary">Kevin Smith's desire to create a sequel to "Dogma" reflects a cultural moment reminiscent of late 1990s films that explored themes of apocalypse and angels.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="gaming">
     <div class="title">
-        <a href="https://www.hollywoodreporter.com/movies/movie-news/being-heumann-mark-ruffalo-sian-heder-1236261259/" target="_blank">Mark Ruffalo Joins ‘CODA’ Director Sian Heder’s ‘Being Heumann’</a>
-        <span class="source-tag">hollywood_reporter</span>
+        <a href="https://www.pcgamer.com/games/rpg/the-outer-worlds-2-game-director-says-its-writing-has-a-less-silly-darker-tone-than-the-first-game/" target="_blank">The Outer Worlds 2 game director says its writing has a 'less silly, darker tone' than the first game</a>
+        <span class="source-tag">pcgamer</span>
     </div>
-    <div class="summary">Mark Ruffalo will portray Joseph Califano in the film "Being Heumann," which adapts Judy Heumann's memoir about a significant disability rights protest in 1977.</div>
+    <div class="tag-list"><span class="tag">Gaming</span></div>
+    <div class="article-image">
+        <img src="https://cdn.mos.cms.futurecdn.net/DUg2h4U3Z66RGRMhWv9Un.jpg" alt="The Outer Worlds 2 game director says its writing has a 'less silly, darker tone' than the first game" loading="lazy">
+    </div>
+    <div class="summary">The writing in The Outer Worlds 2 will feature a darker tone with more emotional depth compared to the first game, while still incorporating humor.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
+<div class="article" data-tags="ai tech news">
+    <div class="title">
+        <a href="https://techcrunch.com/2025/06/09/still-no-ai-powered-more-personalized-siri-from-apple-at-wwdc-25/" target="_blank">Still no AI-powered, ‘more personalized’ Siri from Apple at WWDC 25</a>
+        <span class="source-tag">techcrunch_ai</span>
+    </div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Tech News</span></div>
+    <div class="summary">Apple announced at WWDC 25 that updates for a more personalized, AI-powered Siri will be delayed until at least 2026.</div>
+    <div class="published">Published: June 09, 2025</div>
 </div>
-<div class="category-section">
-    <h2 class="category-title">Tech News (10 articles)</h2>
-    
-<div class="article">
+<div class="article" data-tags="ai tech news">
+    <div class="title">
+        <a href="https://techcrunch.com/2025/06/10/googles-ai-overviews-are-killing-traffic-for-publishers/" target="_blank">Google’s AI search features are killing traffic to publishers</a>
+        <span class="source-tag">techcrunch_ai</span>
+    </div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Tech News</span></div>
+    <div class="summary">Google's AI search features, including AI Overviews and chatbots, are significantly reducing traffic to news publishers by providing answers without directing users to their websites.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="science research">
+    <div class="title">
+        <a href="https://www.sciencedaily.com/releases/2025/06/250610004050.htm" target="_blank">Scientists reveal the hidden pause that keeps bee colonies alive</a>
+        <span class="source-tag">science_daily</span>
+    </div>
+    <div class="tag-list"><span class="tag">Science</span><span class="tag">Research</span></div>
+    <div class="summary">A study found that bumblebee queens exhibit a pattern of egg-laying followed by periods of inactivity, which are crucial for the successful establishment of their colonies.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology gadgets">
+    <div class="title">
+        <a href="https://gizmodo.com/rejoice-godzilla-minus-one-is-finally-stomping-its-way-into-funko-pops-2000611443" target="_blank">Rejoice, ‘Godzilla Minus One’ Is Finally Stomping Its Way Into Funko Pops</a>
+        <span class="source-tag">gizmodo</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Gadgets</span></div>
+    <div class="article-image">
+        <img src="https://gizmodo.com/app/uploads/2025/06/Godzilla-Funko-exclusive.jpg" alt="Rejoice, ‘Godzilla Minus One’ Is Finally Stomping Its Way Into Funko Pops" loading="lazy">
+    </div>
+    <div class="summary">A Funko Pop figure of Godzilla from "Godzilla Minus One" will be released at Anime Expo 2025, expanding the collectible line for fans of the film.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="gaming">
+    <div class="title">
+        <a href="https://www.pcgamer.com/games/japanese-book-publisher-urgently-reprints-dantes-divine-comedy-because-a-gacha-game-where-you-can-summon-him-has-the-weebs-thirsting-for-that-14th-century-epic-verse/" target="_blank">Japanese book publisher 'urgently' reprints Dante's Divine Comedy because a gacha game where you can summon him has the weebs thirsting for that 14th century epic verse</a>
+        <span class="source-tag">pcgamer</span>
+    </div>
+    <div class="tag-list"><span class="tag">Gaming</span></div>
+    <div class="article-image">
+        <img src="https://cdn.mos.cms.futurecdn.net/YppUFn6YNDgxRrUZBBn5GR.jpg" alt="Japanese book publisher 'urgently' reprints Dante's Divine Comedy because a gacha game where you can summon him has the weebs thirsting for that 14th century epic verse" loading="lazy">
+    </div>
+    <div class="summary">A Japanese book publisher is urgently reprinting Dante's Divine Comedy due to increased demand sparked by a popular gacha game featuring the character Dante.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="science research">
+    <div class="title">
+        <a href="https://www.sciencedaily.com/releases/2025/06/250610004054.htm" target="_blank">How madagascar’s lizards became the island’s last hope for reforestation</a>
+        <span class="source-tag">science_daily</span>
+    </div>
+    <div class="tag-list"><span class="tag">Science</span><span class="tag">Research</span></div>
+    <div class="summary">Researchers at Kyoto University have highlighted the significant role of lizards as under-appreciated seed dispersers in forest ecosystems, particularly through the process of endozoochory.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="tech news discussion">
+    <div class="title">
+        <a href="https://www.thehowlingfantods.com/dfw/dubious-math-in-infinite-jest.html" target="_blank">Dubious Math in Infinite Jest (2009)</a>
+        <span class="source-tag">hn_official</span>
+    </div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Discussion</span></div>
+    <div class="summary">The article discusses mathematical errors found in David Foster Wallace's "Infinite Jest," noting that the number of errors is smaller than initially perceived.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology tech news">
+    <div class="title">
+        <a href="https://www.theverge.com/news/684120/threads-direct-messaging-inbox-dm-test-availability" target="_blank">Threads is finally getting DMs</a>
+        <span class="source-tag">the_verge</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Tech News</span></div>
+    <div class="summary">Threads is introducing a direct messaging system that will allow users to send messages to each other without leaving the platform, starting with a test in select countries.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology tech news">
+    <div class="title">
+        <a href="https://www.theverge.com/ipad/684229/ipados-26-hands-on-multitasking-mac" target="_blank">Hang on, did the iPad just become a computer?</a>
+        <span class="source-tag">the_verge</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Tech News</span></div>
+    <div class="summary">With the release of iPadOS 26, Apple has significantly enhanced multitasking capabilities on the iPad, bringing it closer to functioning like a computer.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="science research">
+    <div class="title">
+        <a href="https://www.sciencedaily.com/releases/2025/06/250610074247.htm" target="_blank">New discovery: Tylenol stops pain at the nerves, before it hits the brain</a>
+        <span class="source-tag">science_daily</span>
+    </div>
+    <div class="tag-list"><span class="tag">Science</span><span class="tag">Research</span></div>
+    <div class="summary">A study from the Hebrew University of Jerusalem has discovered that acetaminophen (Tylenol) relieves pain by acting on peripheral nerves, rather than solely in the brain and spinal cord.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="tech news discussion">
     <div class="title">
         <a href="https://news.ycombinator.com/item?id=44238171" target="_blank">Show HN: Chili3d – A open-source, browser-based 3D CAD application</a>
         <span class="source-tag">hacker_news</span>
     </div>
-    <div class="summary">Chili3D is an open-source, browser-based 3D CAD application that offers near-native performance for online modeling and editing without requiring local installation.</div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Discussion</span></div>
+    <div class="summary">Chili3D is an open-source, browser-based 3D CAD application that offers powerful online modeling and editing capabilities without requiring local installation.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="research science">
     <div class="title">
-        <a href="https://news.ycombinator.com/item?id=44237769" target="_blank">Launch HN: BitBoard (YC X25) – AI agents for healthcare back-offices</a>
-        <span class="source-tag">hacker_news</span>
+        <a href="https://news.mit.edu/2025/ai-enabled-control-system-helps-autonomous-drones-uncertain-environments-0609" target="_blank">AI-enabled control system helps autonomous drones stay on target in uncertain environments</a>
+        <span class="source-tag">mit_research</span>
     </div>
-    <div class="summary">BitBoard is developing AI agents to automate repetitive administrative tasks in healthcare clinics, aiming to reduce errors and improve efficiency in patient management.</div>
-    <div class="published">Published: June 10, 2025</div>
+    <div class="tag-list"><span class="tag">Research</span><span class="tag">Science</span></div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202506/MIT_MetaLearning-01.jpg?itok=W4xrH8QL" alt="AI-enabled control system helps autonomous drones stay on target in uncertain environments" loading="lazy">
+    </div>
+    <div class="summary">MIT researchers created a machine learning-based adaptive control algorithm that enables autonomous drones to adjust their flight paths in response to unpredictable disturbances like gusting winds.</div>
+    <div class="published">Published: June 09, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="ai tech news">
     <div class="title">
-        <a href="https://www.thehowlingfantods.com/dfw/dubious-math-in-infinite-jest.html" target="_blank">Dubious Math in Infinite Jest (2009)</a>
-        <span class="source-tag">hacker_news</span>
+        <a href="https://techcrunch.com/2025/06/10/report-meta-taps-scale-ais-alexandr-wang-to-join-new-superintelligence-lab/" target="_blank">Report: Meta taps Scale AI’s Alexandr Wang to join new ‘superintelligence’ lab</a>
+        <span class="source-tag">techcrunch_ai</span>
     </div>
-    <div class="summary">The article discusses mathematical errors found in David Foster Wallace's "Infinite Jest," noting that the number of errors is smaller than initially perceived.</div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Tech News</span></div>
+    <div class="summary">Meta is establishing a new AI research lab focused on "superintelligence" and has recruited Alexandr Wang, founder of Scale AI, to lead the initiative amid efforts to enhance its AI capabilities.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="ai research">
     <div class="title">
-        <a href="https://leejo.github.io/2025/06/10/always_on/" target="_blank">Always On, Always Connected, Always Searching, Always Distracted</a>
-        <span class="source-tag">hacker_news</span>
+        <a href="https://news.mit.edu/2025/coactive-helps-machines-understand-visual-content-ai-0609" target="_blank">Helping machines understand visual content with AI</a>
+        <span class="source-tag">mit_ai</span>
     </div>
-    <div class="summary">The article reflects on a decade-long journey of personal exploration in photography, highlighting the author's experiences and thoughts during that time.</div>
-    <div class="published">Published: June 10, 2025</div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Research</span></div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202506/MIT-Coactive-AI-01-press.jpg?itok=YBc2evUx" alt="Helping machines understand visual content with AI" loading="lazy">
+    </div>
+    <div class="summary">Coactive, founded by MIT alumni, has developed an AI-powered platform designed to extract new insights from various types of content, including video.</div>
+    <div class="published">Published: June 09, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="ai research">
     <div class="title">
-        <a href="https://mistral.ai/news/magistral" target="_blank">Magistral — the first reasoning model by Mistral AI</a>
-        <span class="source-tag">hacker_news</span>
+        <a href="https://news.mit.edu/2025/ai-enabled-control-system-helps-autonomous-drones-uncertain-environments-0609" target="_blank">AI-enabled control system helps autonomous drones stay on target in uncertain environments</a>
+        <span class="source-tag">mit_ai</span>
     </div>
-    <div class="summary">Mistral AI has introduced Magistral, its first reasoning model designed for domain-specific, transparent, and multilingual reasoning.</div>
-    <div class="published">Published: June 10, 2025</div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Research</span></div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202506/MIT_MetaLearning-01.jpg?itok=W4xrH8QL" alt="AI-enabled control system helps autonomous drones stay on target in uncertain environments" loading="lazy">
+    </div>
+    <div class="summary">MIT researchers created a machine learning-based adaptive control algorithm that enables autonomous drones to adjust their flight paths in response to unpredictable disturbances like gusting winds.</div>
+    <div class="published">Published: June 09, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="hardware diy">
     <div class="title">
-        <a href="https://github.com/autoscrape-labs/pydoll" target="_blank">Show HN: PyDoll – Async Python scraping engine with native CAPTCHA bypass</a>
-        <span class="source-tag">hacker_news</span>
+        <a href="https://hackaday.com/2025/06/10/skyroof-a-new-satellite-tracker-for-hams/" target="_blank">SkyRoof, a New Satellite Tracker for Hams</a>
+        <span class="source-tag">hackaday</span>
     </div>
-    <div class="summary">PyDoll is an asynchronous Python scraping engine that bypasses CAPTCHAs natively and operates without webdrivers, enhancing automation tasks.</div>
+    <div class="tag-list"><span class="tag">Hardware</span><span class="tag">DIY</span></div>
+    <div class="article-image">
+        <img src="https://hackaday.com/wp-content/uploads/2025/06/skyroof-main.png" alt="SkyRoof, a New Satellite Tracker for Hams" loading="lazy">
+    </div>
+    <div class="summary">SkyRoof is a new open-source application that aggregates satellite tracking information for ham radio operators, featuring a central waterfall diagram for real-time communication data.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
-    <div class="title">
-        <a href="https://bbenchoff.github.io/pages/FiniteAtari.html" target="_blank">Finding Atari Games in Randomly Generated Data</a>
-        <span class="source-tag">hacker_news</span>
-    </div>
-    <div class="summary">A project generated 30 billion random 4kB files to identify potential Atari games, ultimately using a classifier system to test these files against an Atari 2600 emulator.</div>
-    <div class="published">Published: June 10, 2025</div>
-</div>
-<div class="article">
+<div class="article" data-tags="tech news discussion">
     <div class="title">
         <a href="https://codeanlabs.com/blog/research/cve-2025-47934-spoofing-openpgp-js-signatures/" target="_blank">Spoofing OpenPGP.js signature verification</a>
         <span class="source-tag">hacker_news</span>
     </div>
-    <div class="summary">A vulnerability (CVE-2025-47934) has been identified that allows spoofing of OpenPGP.js signature verification, posing security risks.</div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Discussion</span></div>
+    <div class="summary">A vulnerability has been identified in OpenPGP.js that allows for spoofing of signature verification, posing a security risk.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="productivity tips">
+    <div class="title">
+        <a href="https://lifehacker.com/entertainment/what-people-are-getting-wrong-this-week-ufo-disinformation?utm_medium=RSS" target="_blank">What People Are Getting Wrong This Week: UFO Disinformation</a>
+        <span class="source-tag">lifehacker</span>
+    </div>
+    <div class="tag-list"><span class="tag">Productivity</span><span class="tag">Tips</span></div>
+    <div class="article-image">
+        <img src="https://lifehacker.com/imagery/articles/01JXBH8PZ7CP742BB5B0XC18NH/hero-image.jpg" alt="What People Are Getting Wrong This Week: UFO Disinformation" loading="lazy">
+    </div>
+    <div class="summary">A report by The Wall Street Journal reveals that U.S. governmental and military agencies have been spreading disinformation about UFOs since the 1950s, shaping public perception of notable incidents.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology gadgets">
+    <div class="title">
+        <a href="https://gizmodo.com/amazon-offers-newest-model-of-echo-pop-at-its-lowest-price-of-the-year-as-stock-is-limited-in-their-inventory-2000613370" target="_blank">Amazon Offers the Newest Model of Echo Pop at Its Lowest Price of the Year as Stock Runs Low</a>
+        <span class="source-tag">gizmodo</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Gadgets</span></div>
+    <div class="article-image">
+        <img src="https://gizmodo.com/app/uploads/2025/06/amazonechopop.jpg" alt="Amazon Offers the Newest Model of Echo Pop at Its Lowest Price of the Year as Stock Runs Low" loading="lazy">
+    </div>
+    <div class="summary">The Amazon Echo Pop is currently available for $25, down from $40, offering a compact smart speaker with clear sound quality.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="gaming">
+    <div class="title">
+        <a href="https://www.pcgamer.com/games/survival-crafting/my-biggest-fear-is-the-direct-comparison-to-grounded-1-grounded-2-executive-producer-opens-up-about-the-difficulty-of-following-up-an-early-access-game-with-another-early-access-game/" target="_blank">'My biggest fear is the direct comparison to Grounded 1': Grounded 2 executive producer opens up about the difficulty of following up an early access game with another early access game</a>
+        <span class="source-tag">pcgamer</span>
+    </div>
+    <div class="tag-list"><span class="tag">Gaming</span></div>
+    <div class="article-image">
+        <img src="https://cdn.mos.cms.futurecdn.net/XMhW3PodP7hqctyJoh9RqT.jpg" alt="'My biggest fear is the direct comparison to Grounded 1': Grounded 2 executive producer opens up about the difficulty of following up an early access game with another early access game" loading="lazy">
+    </div>
+    <div class="summary">Obsidian's executive producer expresses concerns about the challenges of releasing Grounded 2 in early access, particularly regarding comparisons to its predecessor.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="research science">
+    <div class="title">
+        <a href="https://news.mit.edu/2025/each-of-us-holds-piece-of-the-solution-0610" target="_blank">“Each of us holds a piece of the solution”</a>
+        <span class="source-tag">mit_research</span>
+    </div>
+    <div class="tag-list"><span class="tag">Research</span><span class="tag">Science</span></div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202505/mit-climate-project-gathering.jpg?itok=HwBV_LDK" alt="“Each of us holds a piece of the solution”" loading="lazy">
+    </div>
+    <div class="summary">A community gathering at MIT, led by Vice President for Energy and Climate Evelyn Wang, focused on the Climate Project and encouraged collaboration among students, faculty, and staff to address climate challenges.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="security alerts">
+    <div class="title">
+        <a href="https://www.cisa.gov/news-events/cybersecurity-advisories/aa25-050a" target="_blank">#StopRansomware: Ghost (Cring) Ransomware</a>
+        <span class="source-tag">us_cert</span>
+    </div>
+    <div class="tag-list"><span class="tag">Security</span><span class="tag">Alerts</span></div>
+    <div class="summary">The Cybersecurity Advisory #StopRansomware outlines measures for organizations to protect against Ghost (Cring) Ransomware, including maintaining separate backups and applying timely security updates.</div>
+    <div class="published">Published: February 19, 2025</div>
+</div>
+<div class="article" data-tags="ai tech news">
+    <div class="title">
+        <a href="https://techcrunch.com/2025/06/10/enterprise-ai-startup-glean-lands-a-7-2b-valuation/" target="_blank">Enterprise AI startup Glean lands a $7.2B valuation</a>
+        <span class="source-tag">techcrunch_ai</span>
+    </div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Tech News</span></div>
+    <div class="summary">Enterprise AI startup Glean has achieved a $7.2 billion valuation after raising $150 million in a Series F funding round, significantly increasing its valuation from $4.6 billion less than a year prior.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="economics research">
+    <div class="title">
+        <a href="https://news.mit.edu/2025/community-spotlight-math-politics-power-0606" target="_blank">The math of politics and power</a>
+        <span class="source-tag">mit_economics</span>
+    </div>
+    <div class="tag-list"><span class="tag">Economics</span><span class="tag">Research</span></div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202505/mit-econ-prof-daron-acemoglu.jpg?itok=AZ7m54-j" alt="The math of politics and power" loading="lazy">
+    </div>
+    <div class="summary">Daron Acemoglu teaches a PhD class at MIT that explores the relationships between history, political power, and economics.</div>
+    <div class="published">Published: June 06, 2025</div>
+</div>
+<div class="article" data-tags="technology tech news">
+    <div class="title">
+        <a href="https://www.theverge.com/news/684313/microsoft-build-conference-2026-location" target="_blank">Microsoft is moving its Build conference out of Seattle for 2026</a>
+        <span class="source-tag">the_verge</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Tech News</span></div>
+    <div class="summary">Microsoft is relocating its Build developer conference from Seattle for 2026, having canceled all future reservations at the Seattle convention center.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology gadgets">
+    <div class="title">
+        <a href="https://gizmodo.com/rfk-jr-purges-cdcs-vital-vaccine-advisory-committee-2000613732" target="_blank">RFK Jr.’s Baseless Purge of CDC Vaccine Panel Alarms Public Health Experts</a>
+        <span class="source-tag">gizmodo</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Gadgets</span></div>
+    <div class="article-image">
+        <img src="https://gizmodo.com/app/uploads/2025/06/Kennedy.jpg" alt="RFK Jr.’s Baseless Purge of CDC Vaccine Panel Alarms Public Health Experts" loading="lazy">
+    </div>
+    <div class="summary">Robert F. Kennedy Jr. has terminated all 17 members of the CDC's Advisory Committee on Immunization Practices, raising concerns among public health experts about the potential impact on vaccine policy and public trust.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology tech news">
+    <div class="title">
+        <a href="https://www.theverge.com/policy/683596/cafe-fuel-economy-usdot-nhtsa-ev-duffy-republican" target="_blank">Republicans are determined to make you pay more for gas</a>
+        <span class="source-tag">the_verge</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Tech News</span></div>
+    <div class="summary">The U.S. Transportation Secretary has announced a reset of the Corporate Average Fuel Economy (CAFE) standards, which may lead to increased fuel costs for consumers.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="tech news business">
+    <div class="title">
+        <a href="https://venturebeat.com/games/valr-and-moonpay-partner-to-make-crypto-more-accessible-in-180-countries/" target="_blank">VALR and MoonPay partner to make crypto more accessible in 180 countries</a>
+        <span class="source-tag">venturebeat</span>
+    </div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Business</span></div>
+    <div class="summary">VALR and MoonPay have partnered to enhance cryptocurrency accessibility in 180 countries by integrating fiat on- and off-ramps for various payment methods.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology gadgets">
+    <div class="title">
+        <a href="https://www.engadget.com/gaming/nintendo/splatoon-spinoff-game-will-launch-exclusively-on-switch-2-151541869.html?src=rss" target="_blank">Splatoon spinoff game will launch exclusively on Switch 2</a>
+        <span class="source-tag">engadget</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Gadgets</span></div>
+    <div class="article-image">
+        <img src="https://o.aolcdn.com/images/dims?image_uri=https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2025-06%2Fd88c8e00-460b-11f0-b67f-d2efb7cf6015&resize=1400%2C787&client=19f2b5e49a271b2bde77&signature=defb48d41f49991839d1a3eae55bfa8d963b1930" alt="Splatoon spinoff game will launch exclusively on Switch 2" loading="lazy">
+    </div>
+    <div class="summary">Nintendo announced the release of a Splatoon spinoff game titled "Splatoon Raiders," which will be exclusive to the Switch 2 and set in the new location of Spirhalite Islands.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="hardware diy">
+    <div class="title">
+        <a href="https://hackaday.com/2025/06/10/the-ongoing-bcachefs-filesystem-stability-controversy/" target="_blank">The Ongoing BcacheFS Filesystem Stability Controversy</a>
+        <span class="source-tag">hackaday</span>
+    </div>
+    <div class="tag-list"><span class="tag">Hardware</span><span class="tag">DIY</span></div>
+    <div class="article-image">
+        <img src="https://hackaday.com/wp-content/uploads/2025/06/driveart_feat.jpg" alt="The Ongoing BcacheFS Filesystem Stability Controversy" loading="lazy">
+    </div>
+    <div class="summary">The BcacheFS filesystem, merged into the Linux kernel in early 2024, is facing stability issues and frequent patches, leading to criticism from Linus Torvalds regarding its integration.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology gadgets">
+    <div class="title">
+        <a href="https://gizmodo.com/5-star-hp-laptop-is-nearly-70-off-practically-free-with-windows-11-pro-ms-office-and-more-2000612656" target="_blank">5-Star HP Laptop Is Nearly 70% Off, Practically Free With Windows 11 Pro, MS Office, and More</a>
+        <span class="source-tag">gizmodo</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Gadgets</span></div>
+    <div class="article-image">
+        <img src="https://gizmodo.com/app/uploads/2025/06/HPStudentBusinessLaptop.jpg" alt="5-Star HP Laptop Is Nearly 70% Off, Practically Free With Windows 11 Pro, MS Office, and More" loading="lazy">
+    </div>
+    <div class="summary">Amazon is offering a significant discount on an HP laptop, reducing its price from $1,199 to $369, which includes Windows 11 Pro and Microsoft Office.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="ai tech news">
+    <div class="title">
+        <a href="https://techcrunch.com/2025/06/10/at-wwdc-2025-apple-sang-developers-praises-amid-ai-letdowns-and-app-store-battles/" target="_blank">At WWDC 2025, Apple sang developers’ praises amid AI letdowns and App Store battles</a>
+        <span class="source-tag">techcrunch_ai</span>
+    </div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Tech News</span></div>
+    <div class="summary">During WWDC 2025, Apple celebrated app developers with a musical performance but did not address ongoing challenges and criticisms related to its App Store practices.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology tech news">
+    <div class="title">
+        <a href="https://www.theverge.com/hands-on/684170/vanmoofs-new-s6-e-bikes-fix-everything-but-trust" target="_blank">VanMoof’s new S6 e-bikes fix everything but trust</a>
+        <span class="source-tag">the_verge</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Tech News</span></div>
+    <div class="summary">VanMoof has launched its new S6 e-bikes, the first developed after its bankruptcy, which show promising improvements in design and functionality.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology gadgets">
+    <div class="title">
+        <a href="https://www.engadget.com/gaming/palmer-luckeys-modretro-chromatic-portable-console-is-now-a-thing-you-can-actually-buy-160014434.html?src=rss" target="_blank">Palmer Luckey's ModRetro Chromatic portable console is now a thing you can actually buy</a>
+        <span class="source-tag">engadget</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Gadgets</span></div>
+    <div class="article-image">
+        <img src="https://o.aolcdn.com/images/dims?image_uri=https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2025-06%2F0835a1d0-4096-11f0-bbe7-f259b328344f&resize=1400%2C932&client=19f2b5e49a271b2bde77&signature=2f09c2fcc2c394276b9cada69b0b0c5285462a64" alt="Palmer Luckey's ModRetro Chromatic portable console is now a thing you can actually buy" loading="lazy">
+    </div>
+    <div class="summary">The ModRetro Chromatic portable console, designed by Palmer Luckey, is now available for purchase and supports Game Boy and Game Boy Color cartridges with a backlit screen.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology in-depth">
+    <div class="title">
+        <a href="https://arstechnica.com/information-technology/2025/06/broadcom-ends-business-with-vmwares-lowest-tier-channel-partners/" target="_blank">Broadcom ends business with VMware’s lowest-tier channel partners</a>
+        <span class="source-tag">ars_technica</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">In-depth</span></div>
+    <div class="article-image">
+        <img src="https://cdn.arstechnica.net/wp-content/uploads/2025/06/GettyImages-114396654-1152x648-1748890824.jpg" alt="Broadcom ends business with VMware’s lowest-tier channel partners" loading="lazy">
+    </div>
+    <div class="summary">Broadcom has eliminated the lowest tier of its VMware partner program, focusing on larger deployments while risking migrations from affected partners.</div>
+    <div class="published">Published: June 02, 2025</div>
+</div>
+<div class="article" data-tags="productivity tips">
+    <div class="title">
+        <a href="https://lifehacker.com/entertainment/best-movies-on-apple-tv-plus?utm_medium=RSS" target="_blank">The Best Apple TV+ Original Movies Everyone Should Watch</a>
+        <span class="source-tag">lifehacker</span>
+    </div>
+    <div class="tag-list"><span class="tag">Productivity</span><span class="tag">Tips</span></div>
+    <div class="article-image">
+        <img src="https://lifehacker.com/imagery/articles/01HRQ1WE5GQPWHBFZVAT9XFRXK/hero-image.jpg" alt="The Best Apple TV+ Original Movies Everyone Should Watch" loading="lazy">
+    </div>
+    <div class="summary">Apple TV+ has produced a range of original films since 2019, including award-winning titles like CODA, and continues to release both prestigious and entertaining movies.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="research science">
+    <div class="title">
+        <a href="https://news.mit.edu/2025/new-facility-accelerate-materials-solutions-fusion-energy-0609" target="_blank">New facility to accelerate materials solutions for fusion energy</a>
+        <span class="source-tag">mit_research</span>
+    </div>
+    <div class="tag-list"><span class="tag">Research</span><span class="tag">Science</span></div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202505/mit-LMNT-rendering.jpg?itok=Z10i1y_J" alt="New facility to accelerate materials solutions for fusion energy" loading="lazy">
+    </div>
+    <div class="summary">MIT's Plasma Science and Fusion Center is launching the Schmidt Laboratory for Materials in Nuclear Technologies to expedite the development of materials for future fusion energy applications.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article" data-tags="science research">
+    <div class="title">
+        <a href="https://www.sciencedaily.com/releases/2025/06/250610004044.htm" target="_blank">Scientists may have spotted a giant new planet forming</a>
+        <span class="source-tag">science_daily</span>
+    </div>
+    <div class="tag-list"><span class="tag">Science</span><span class="tag">Research</span></div>
+    <div class="summary">Scientists using the Very Large Telescope in Chile have captured images of a structured disk around a young star, indicating the potential formation of a giant new planet.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="tech news discussion">
+    <div class="title">
+        <a href="https://leejo.github.io/2025/06/10/always_on/" target="_blank">Always On, Always Connected, Always Searching, Always Distracted</a>
+        <span class="source-tag">hacker_news</span>
+    </div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Discussion</span></div>
+    <div class="summary">The article reflects on a decade-long journey of personal exploration in photography, highlighting the author's experiences and thoughts during that time.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="productivity tips">
+    <div class="title">
+        <a href="https://lifehacker.com/tech/apple-finally-added-my-most-requested-app-to-the-apple-watch-wwdc-2025?utm_medium=RSS" target="_blank">Apple Finally Added My Most-Requested App to the Apple Watch</a>
+        <span class="source-tag">lifehacker</span>
+    </div>
+    <div class="tag-list"><span class="tag">Productivity</span><span class="tag">Tips</span></div>
+    <div class="article-image">
+        <img src="https://lifehacker.com/imagery/articles/01JXC0ZYAS5TZRKZHEMGH38PDZ/hero-image.png" alt="Apple Finally Added My Most-Requested App to the Apple Watch" loading="lazy">
+    </div>
+    <div class="summary">Apple is introducing a Notes app for the Apple Watch in watchOS 26, addressing a long-requested feature for users.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="science research">
+    <div class="title">
+        <a href="https://www.sciencedaily.com/releases/2025/06/250610074301.htm" target="_blank">Sharper than lightning: Oxford’s one-in-6. 7-million quantum breakthrough</a>
+        <span class="source-tag">science_daily</span>
+    </div>
+    <div class="tag-list"><span class="tag">Science</span><span class="tag">Research</span></div>
+    <div class="summary">Oxford researchers have achieved the most accurate qubit operation ever recorded, significantly reducing error rates in quantum logic gates, which is a crucial step towards practical quantum computing.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology gadgets">
+    <div class="title">
+        <a href="https://gizmodo.com/dji-1024wh-portable-power-station-is-now-55-off-your-ultimate-camping-companion-this-summer-2000613814" target="_blank">DJI 1024Wh Portable Power Station Is Now 55% Off, Your Ultimate Camping Companion This Summer</a>
+        <span class="source-tag">gizmodo</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Gadgets</span></div>
+    <div class="article-image">
+        <img src="https://gizmodo.com/app/uploads/2025/02/djipower.jpg" alt="DJI 1024Wh Portable Power Station Is Now 55% Off, Your Ultimate Camping Companion This Summer" loading="lazy">
+    </div>
+    <div class="summary">The DJI Power 1000 portable power station is now priced at $449, reflecting a 55% discount from its original price of $999, making it a popular choice for outdoor activities.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="research science">
+    <div class="title">
+        <a href="https://news.mit.edu/2025/universal-nanosensor-unlocks-plant-growth-secrets-0609" target="_blank">Universal nanosensor unlocks the secrets to plant growth</a>
+        <span class="source-tag">mit_research</span>
+    </div>
+    <div class="tag-list"><span class="tag">Research</span><span class="tag">Science</span></div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202505/smart-distap.jpg?itok=aOnFgEyr" alt="Universal nanosensor unlocks the secrets to plant growth" loading="lazy">
+    </div>
+    <div class="summary">Researchers from SMART DiSTAP developed a near-infrared fluorescent nanosensor that can monitor the primary plant growth hormone, indole-3-acetic acid, in real-time without harming the plant.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article" data-tags="productivity tips">
+    <div class="title">
+        <a href="https://lifehacker.com/health/best-fathers-day-self-care-gifts?utm_medium=RSS" target="_blank">The Best Father's Day Gifts for Dads Who Could Use a Little Self-Care</a>
+        <span class="source-tag">lifehacker</span>
+    </div>
+    <div class="tag-list"><span class="tag">Productivity</span><span class="tag">Tips</span></div>
+    <div class="article-image">
+        <img src="https://lifehacker.com/imagery/articles/01JXAVJC81ENKFA07FB5DWKET7/hero-image.png" alt="The Best Father's Day Gifts for Dads Who Could Use a Little Self-Care" loading="lazy">
+    </div>
+    <div class="summary">The article suggests various self-care gifts for Father's Day, highlighting the benefits of percussive massage guns for muscle recovery and relaxation.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="ai research">
+    <div class="title">
+        <a href="https://news.mit.edu/2025/themis-ai-teaches-ai-models-what-they-dont-know-0603" target="_blank">Teaching AI models what they don’t know</a>
+        <span class="source-tag">mit_ai</span>
+    </div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Research</span></div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202506/MIT-ThemisAI-01-Press.jpg?itok=ez4Dk4qN" alt="Teaching AI models what they don’t know" loading="lazy">
+    </div>
+    <div class="summary">MIT researchers have established Themis AI to measure AI model uncertainty and identify knowledge gaps in artificial intelligence systems.</div>
+    <div class="published">Published: June 03, 2025</div>
+</div>
+<div class="article" data-tags="technology society">
+    <div class="title">
+        <a href="https://news.mit.edu/2025/envisioning-future-where-health-care-tech-leaves-some-behind-0609" target="_blank">Envisioning a future where health care tech leaves some behind</a>
+        <span class="source-tag">mit_society</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Society</span></div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202506/Annaliese%20statue%20crop.jpg?itok=tb-rkzoF" alt="Envisioning a future where health care tech leaves some behind" loading="lazy">
+    </div>
+    <div class="summary">The winning essay of the Envisioning the Future of Computing Prize focuses on the critical need to address health care disparities in the face of technological advancements.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article" data-tags="hardware diy">
+    <div class="title">
+        <a href="https://hackaday.com/2025/06/09/a-modern-take-on-iconic-industrial-design/" target="_blank">A Modern Take on Iconic Industrial Design</a>
+        <span class="source-tag">hackaday</span>
+    </div>
+    <div class="tag-list"><span class="tag">Hardware</span><span class="tag">DIY</span></div>
+    <div class="article-image">
+        <img src="https://hackaday.com/wp-content/uploads/2025/06/ir7_streaming_radio.png" alt="A Modern Take on Iconic Industrial Design" loading="lazy">
+    </div>
+    <div class="summary">The IR7 streaming radio by [2dom] is inspired by Dieter Rams' industrial design philosophy and features a cylindrical shape, a circular LCD display, and is built from four 3D-printed components.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article" data-tags="gaming">
+    <div class="title">
+        <a href="https://www.pcgamer.com/games/adventure/if-youve-ever-wanted-to-play-an-npc-in-a-hitman-level-then-do-i-have-the-steam-next-fest-demo-for-you/" target="_blank">If you've ever wanted to play an NPC in a Hitman level then do I have the Steam Next Fest demo for you</a>
+        <span class="source-tag">pcgamer</span>
+    </div>
+    <div class="tag-list"><span class="tag">Gaming</span></div>
+    <div class="article-image">
+        <img src="https://cdn.mos.cms.futurecdn.net/epFR34mGpPBuk7QwDFznMG.png" alt="If you've ever wanted to play an NPC in a Hitman level then do I have the Steam Next Fest demo for you" loading="lazy">
+    </div>
+    <div class="summary">The Steam Next Fest demo for the game Elevator Music allows players to experience the role of an elevator attendant, highlighting the potential for subtle interference with power dynamics.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="science research">
+    <div class="title">
+        <a href="https://www.sciencedaily.com/releases/2025/06/250610080025.htm" target="_blank">What a dinosaur ate 100 million years ago—Preserved in a fossilized time capsule</a>
+        <span class="source-tag">science_daily</span>
+    </div>
+    <div class="tag-list"><span class="tag">Science</span><span class="tag">Research</span></div>
+    <div class="summary">Researchers have found preserved gut contents from a sauropod dinosaur, providing direct evidence of its diet and confirming hypotheses about its ecological role.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology gadgets">
+    <div class="title">
+        <a href="https://www.engadget.com/the-best-fathers-day-gifts-and-gadgets-for-every-dad-in-2025-131504075.html?src=rss" target="_blank">The best Father's Day gifts and gadgets for every dad in 2025</a>
+        <span class="source-tag">engadget</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Gadgets</span></div>
+    <div class="article-image">
+        <img src="https://o.aolcdn.com/images/dims?image_uri=https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2025-05%2Fbcad8850-327f-11f0-9517-ca66d5db6b95&resize=1400%2C787&client=19f2b5e49a271b2bde77&signature=30921ecd3a05b1e80f07a55f562113d8762ba610" alt="The best Father's Day gifts and gadgets for every dad in 2025" loading="lazy">
+    </div>
+    <div class="summary">Engadget has compiled a list of recommended gifts and gadgets for Father's Day 2025, catering to various interests and budgets.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="gaming">
+    <div class="title">
+        <a href="https://www.pcgamer.com/hardware/gaming-monitors/after-15-months-and-3-800-hours-of-worst-case-usage-one-independent-test-finds-oled-burn-in-is-now-almost-a-non-issue/" target="_blank">After 15 months and 3,800 hours of 'worst case' usage, one independent test finds OLED burn-in is now almost a non-issue</a>
+        <span class="source-tag">pcgamer</span>
+    </div>
+    <div class="tag-list"><span class="tag">Gaming</span></div>
+    <div class="article-image">
+        <img src="https://cdn.mos.cms.futurecdn.net/8jwJorGdF9RFyagTdmfND.jpg" alt="After 15 months and 3,800 hours of 'worst case' usage, one independent test finds OLED burn-in is now almost a non-issue" loading="lazy">
+    </div>
+    <div class="summary">A long-term test of a QD-OLED monitor indicates that OLED burn-in is becoming a negligible concern after 15 months of intensive use.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="ai tech news">
+    <div class="title">
+        <a href="https://www.artificialintelligence-news.com/news/the-ai-blockchain-what-is-it-really/" target="_blank">The AI blockchain: What is it really?</a>
+        <span class="source-tag">ai_news</span>
+    </div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Tech News</span></div>
+    <div class="summary">The article discusses the implications of decentralization in AI infrastructure, drawing parallels with the lessons learned from cryptocurrencies.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="tech news business">
+    <div class="title">
+        <a href="https://venturebeat.com/games/sandbox-vr-reveals-stranger-things-catalyst-a-fully-immersive-experience/" target="_blank">Sandbox VR reveals Stranger Things: Catalyst, a fully immersive experience</a>
+        <span class="source-tag">venturebeat</span>
+    </div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Business</span></div>
+    <div class="summary">Sandbox VR is launching a new immersive VR experience called Stranger Things: Catalyst, set in the Stranger Things universe, later this year to coincide with the show's fifth season.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="ai tech news">
+    <div class="title">
+        <a href="https://www.artificialintelligence-news.com/news/openai-south-korea-expansion-strategy/" target="_blank">OpenAI’s second largest paying market gets its own office: The South Korean story</a>
+        <span class="source-tag">ai_news</span>
+    </div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Tech News</span></div>
+    <div class="summary">OpenAI has established an office in South Korea following an eleven-fold increase in ChatGPT's user base, making it the company's second largest paying market.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="physics science">
+    <div class="title">
+        <a href="https://phys.org/news/2025-06-patterns-sculpted-physics-evolution-revealed.html" target="_blank">Patterns sculpted by physics: Evolution as revealed by turtle scales</a>
+        <span class="source-tag">phys_org</span>
+    </div>
+    <div class="tag-list"><span class="tag">Physics</span><span class="tag">Science</span></div>
+    <div class="article-image">
+        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/evolution-revealed-by.jpg" alt="Patterns sculpted by physics: Evolution as revealed by turtle scales" loading="lazy">
+    </div>
+    <div class="summary">Researchers found that turtle scales are formed through a combination of chemical models and mechanical stresses related to bone growth, differing from the placode-based development seen in most vertebrates.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="security alerts">
+    <div class="title">
+        <a href="https://www.cisa.gov/news-events/cybersecurity-advisories/aa25-071a" target="_blank">#StopRansomware: Medusa Ransomware</a>
+        <span class="source-tag">us_cert</span>
+    </div>
+    <div class="tag-list"><span class="tag">Security</span><span class="tag">Alerts</span></div>
+    <div class="summary">The Cybersecurity Advisory #StopRansomware highlights mitigation strategies for organizations to combat Medusa Ransomware, emphasizing the importance of patching vulnerabilities and network segmentation.</div>
+    <div class="published">Published: March 11, 2025</div>
+</div>
+<div class="article" data-tags="technology research">
+    <div class="title">
+        <a href="https://news.mit.edu/2025/ai-enabled-control-system-helps-autonomous-drones-uncertain-environments-0609" target="_blank">AI-enabled control system helps autonomous drones stay on target in uncertain environments</a>
+        <span class="source-tag">mit_news</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Research</span></div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202506/MIT_MetaLearning-01.jpg?itok=W4xrH8QL" alt="AI-enabled control system helps autonomous drones stay on target in uncertain environments" loading="lazy">
+    </div>
+    <div class="summary">MIT researchers created a machine learning-based adaptive control algorithm that enables autonomous drones to adjust their flight paths in response to unpredictable disturbances like gusting winds.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article" data-tags="technology tech news">
+    <div class="title">
+        <a href="https://www.theverge.com/news/684322/meta-scale-ai-15-billion-investment-zuckerberg" target="_blank">Meta is reportedly making a $15 billion bet on AGI</a>
+        <span class="source-tag">the_verge</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Tech News</span></div>
+    <div class="summary">Meta is reportedly making a $15 billion investment in Scale AI to acquire a 49% stake and enhance its efforts towards achieving artificial general intelligence.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology society">
+    <div class="title">
+        <a href="https://news.mit.edu/2025/how-we-really-judge-ai-0610" target="_blank">How we really judge AI</a>
+        <span class="source-tag">mit_society</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Society</span></div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202506/MIT-AI-Aversion-Appreciation-01.jpg?itok=vlwejm54" alt="How we really judge AI" loading="lazy">
+    </div>
+    <div class="summary">A new study reveals that people's attitudes toward AI are nuanced, evaluating its usefulness on a case-by-case basis rather than aligning strictly with techno-optimism or Luddism.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="tech news discussion">
+    <div class="title">
+        <a href="https://news.ycombinator.com/item?id=44237769" target="_blank">Launch HN: BitBoard (YC X25) – AI agents for healthcare back-offices</a>
+        <span class="source-tag">hacker_news</span>
+    </div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Discussion</span></div>
+    <div class="summary">BitBoard is developing AI agents to automate repetitive administrative tasks in healthcare clinics, aiming to reduce errors and improve efficiency in managing patient records and referrals.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology society">
+    <div class="title">
+        <a href="https://news.mit.edu/2025/ai-stirs-recipe-for-concrete-0602" target="_blank">AI stirs up the recipe for concrete in MIT study</a>
+        <span class="source-tag">mit_society</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Society</span></div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202505/mit-Soroush-Mahjoubi.jpg?itok=IKHpfT6a" alt="AI stirs up the recipe for concrete in MIT study" loading="lazy">
+    </div>
+    <div class="summary">An MIT team developed a machine-learning framework to identify alternative materials for cleaner concrete, highlighting ceramics as promising candidates to replace cement.</div>
+    <div class="published">Published: June 02, 2025</div>
+</div>
+<div class="article" data-tags="hardware diy">
+    <div class="title">
+        <a href="https://hackaday.com/2025/06/09/building-an-assembly-line-for-origami-pigeons/" target="_blank">Building an Assembly Line for Origami Pigeons</a>
+        <span class="source-tag">hackaday</span>
+    </div>
+    <div class="tag-list"><span class="tag">Hardware</span><span class="tag">DIY</span></div>
+    <div class="article-image">
+        <img src="https://hackaday.com/wp-content/uploads/2025/06/origami-line-banner_f1a5a7.png" alt="Building an Assembly Line for Origami Pigeons" loading="lazy">
+    </div>
+    <div class="summary">HTX Studio has created an assembly line for producing origami pigeons, achieving a throughput of one bird every ten seconds with a latency of approximately 50 seconds.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="tech news discussion">
+    <div class="title">
+        <a href="https://news.ycombinator.com/item?id=44226145" target="_blank">Tell HN: Help restore the tax deduction for software dev in the US (Section 174)</a>
+        <span class="source-tag">hn_official</span>
+    </div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Discussion</span></div>
+    <div class="summary">A movement is underway to restore the tax deduction for software development expenses in the US under Section 174.</div>
+    <div class="published">Published: June 09, 2025</div>
+</div>
+<div class="article" data-tags="productivity tips">
+    <div class="title">
+        <a href="https://lifehacker.com/tech/amazon-kindle-scribe-64-gb-sale?utm_medium=RSS" target="_blank">The Amazon Kindle Scribe Is Currently at Its Lowest Price Ever</a>
+        <span class="source-tag">lifehacker</span>
+    </div>
+    <div class="tag-list"><span class="tag">Productivity</span><span class="tag">Tips</span></div>
+    <div class="article-image">
+        <img src="https://lifehacker.com/imagery/articles/01JXBXFJH2M57F3TGC70NGS777/hero-image.png" alt="The Amazon Kindle Scribe Is Currently at Its Lowest Price Ever" loading="lazy">
+    </div>
+    <div class="summary">The Amazon Kindle Scribe is currently available at its lowest price ever, retailing for $349.99, down from $449.99, and includes a Premium Pen.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="physics science">
+    <div class="title">
+        <a href="https://phys.org/news/2025-06-urban-musical.html" target="_blank">Urban living expands musical tastes but reduces shared preferences, study finds</a>
+        <span class="source-tag">phys_org</span>
+    </div>
+    <div class="tag-list"><span class="tag">Physics</span><span class="tag">Science</span></div>
+    <div class="article-image">
+        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/headphones-subway.jpg" alt="Urban living expands musical tastes but reduces shared preferences, study finds" loading="lazy">
+    </div>
+    <div class="summary">A study found that urban living broadens musical tastes but decreases shared musical preferences among individuals in close proximity.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="science research">
+    <div class="title">
+        <a href="https://www.sciencedaily.com/releases/2025/06/250610074256.htm" target="_blank">Sun unleashes monster solar storm: Rare G4 alert issued for earth</a>
+        <span class="source-tag">science_daily</span>
+    </div>
+    <div class="tag-list"><span class="tag">Science</span><span class="tag">Research</span></div>
+    <div class="summary">A powerful Coronal Mass Ejection from the Sun has prompted a G4 geomagnetic storm alert for Earth, with the event observed to have an apparent velocity exceeding 1,700 kilometers per second.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="science research">
+    <div class="title">
+        <a href="https://www.sciencedaily.com/releases/2025/06/250610004101.htm" target="_blank">This overlooked supplement could help you think sharper and age better</a>
+        <span class="source-tag">science_daily</span>
+    </div>
+    <div class="tag-list"><span class="tag">Science</span><span class="tag">Research</span></div>
+    <div class="summary">Research indicates that creatine, a compound essential for cellular energy, may provide protective health benefits beyond exercise performance, with recommendations for daily intake ranging from two to four grams.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology research">
+    <div class="title">
+        <a href="https://news.mit.edu/2025/how-we-really-judge-ai-0610" target="_blank">How we really judge AI</a>
+        <span class="source-tag">mit_news</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Research</span></div>
+    <div class="article-image">
+        <img src="https://news.mit.edu/sites/default/files/styles/news_article__cover_image__original/public/images/202506/MIT-AI-Aversion-Appreciation-01.jpg?itok=vlwejm54" alt="How we really judge AI" loading="lazy">
+    </div>
+    <div class="summary">A new study reveals that people's attitudes toward AI are nuanced, evaluating its usefulness on a case-by-case basis rather than aligning strictly with techno-optimism or Luddism.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="security alerts">
+    <div class="title">
+        <a href="https://www.cisa.gov/news-events/cybersecurity-advisories/aa25-141b" target="_blank">Threat Actors Deploy LummaC2 Malware to Exfiltrate Sensitive Data from Organizations</a>
+        <span class="source-tag">us_cert</span>
+    </div>
+    <div class="tag-list"><span class="tag">Security</span><span class="tag">Alerts</span></div>
+    <div class="article-image">
+        <img src="https://www.cisa.gov/sites/default/files/styles/large/public/2025-05/Figure%201%20-%20LummaC2%20Main%20Routine.png?itok=4-3q4JJo" alt="Threat Actors Deploy LummaC2 Malware to Exfiltrate Sensitive Data from Organizations" loading="lazy">
+    </div>
+    <div class="summary">The FBI and CISA have issued a warning about LummaC2 malware, which is capable of exfiltrating sensitive data from organizations across critical infrastructure sectors.</div>
+    <div class="published">Published: May 20, 2025</div>
+</div>
+<div class="article" data-tags="technology in-depth">
+    <div class="title">
+        <a href="https://arstechnica.com/ai/2025/06/in-10-years-all-bets-are-off-anthropic-ceo-opposes-decade-long-freeze-on-state-ai-laws/" target="_blank">“In 10 years, all bets are off”—Anthropic CEO opposes decadelong freeze on state AI laws</a>
+        <span class="source-tag">ars_technica</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">In-depth</span></div>
+    <div class="article-image">
+        <img src="https://cdn.arstechnica.net/wp-content/uploads/2024/11/dario_amodei_header-1152x648.jpg" alt="“In 10 years, all bets are off”—Anthropic CEO opposes decadelong freeze on state AI laws" loading="lazy">
+    </div>
+    <div class="summary">Anthropic CEO Dario Amodei opposes a proposed 10-year moratorium on state AI regulation, arguing that AI advancements are too rapid for such a freeze.</div>
+    <div class="published">Published: June 05, 2025</div>
+</div>
+<div class="article" data-tags="tech news discussion">
+    <div class="title">
+        <a href="https://mistral.ai/news/magistral" target="_blank">Magistral — the first reasoning model by Mistral AI</a>
+        <span class="source-tag">hacker_news</span>
+    </div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Discussion</span></div>
+    <div class="summary">Mistral AI has introduced Magistral, its first reasoning model designed for domain-specific, transparent, and multilingual reasoning.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="productivity tips">
+    <div class="title">
+        <a href="https://lifehacker.com/home/fathers-day-home-depot-power-tools-sale?utm_medium=RSS" target="_blank">Home Depot Is Having a Great Father’s Day Sale on Power Tools</a>
+        <span class="source-tag">lifehacker</span>
+    </div>
+    <div class="tag-list"><span class="tag">Productivity</span><span class="tag">Tips</span></div>
+    <div class="article-image">
+        <img src="https://lifehacker.com/imagery/articles/01JXC3J3JFT2RF47397GJ711X2/hero-image.jpg" alt="Home Depot Is Having a Great Father’s Day Sale on Power Tools" loading="lazy">
+    </div>
+    <div class="summary">Home Depot is offering significant discounts on power tools for Father's Day, including a Ryobi six-tool combo kit at 33% off.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="physics science">
+    <div class="title">
+        <a href="https://phys.org/news/2025-06-economists-radical-global-wealth-tax.html" target="_blank">Some economists have called for a radical 'global wealth tax' on billionaires. How would that work?</a>
+        <span class="source-tag">phys_org</span>
+    </div>
+    <div class="tag-list"><span class="tag">Physics</span><span class="tag">Science</span></div>
+    <div class="article-image">
+        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/monaco.jpg" alt="Some economists have called for a radical 'global wealth tax' on billionaires. How would that work?" loading="lazy">
+    </div>
+    <div class="summary">Some economists propose a radical global wealth tax on billionaires as a potential solution to economic inequities exacerbated by inheritance and tax systems.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="ai tech news">
+    <div class="title">
+        <a href="https://techcrunch.com/2025/06/10/mistral-releases-a-pair-of-ai-reasoning-models/" target="_blank">Mistral releases a pair of AI reasoning models</a>
+        <span class="source-tag">techcrunch_ai</span>
+    </div>
+    <div class="tag-list"><span class="tag">AI</span><span class="tag">Tech News</span></div>
+    <div class="summary">Mistral launched its first family of reasoning AI models, called Magistral, which includes two versions designed for improved problem-solving across various topics.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="hardware diy">
+    <div class="title">
+        <a href="https://hackaday.com/2025/06/10/repairing-vintage-sony-luggable-calculators/" target="_blank">Repairing Vintage Sony Luggable Calculators</a>
+        <span class="source-tag">hackaday</span>
+    </div>
+    <div class="tag-list"><span class="tag">Hardware</span><span class="tag">DIY</span></div>
+    <div class="article-image">
+        <img src="https://hackaday.com/wp-content/uploads/2025/06/sony.png" alt="Repairing Vintage Sony Luggable Calculators" loading="lazy">
+    </div>
+    <div class="summary">Vintage Sony calculators, including models from the 1960s that use Nixie tubes, are being restored, highlighting their historical significance and unique design features.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="tech news discussion">
     <div class="title">
         <a href="https://steveblank.com/2025/06/10/teaching-national-security-policy-with-ai/" target="_blank">Teaching National Security Policy with AI</a>
         <span class="source-tag">hacker_news</span>
     </div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Discussion</span></div>
     <div class="summary">Stanford's national security policy class has integrated AI to prepare students for careers in an AI-enabled world, focusing on the geopolitics of U.S. strategic competition with great power rivals.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
-<div class="article">
+<div class="article" data-tags="technology gadgets">
     <div class="title">
-        <a href="https://www.youtube.com/watch?v=_sv8K190Zps" target="_blank">Faster, easier 2D vector rendering [video]</a>
-        <span class="source-tag">hacker_news</span>
+        <a href="https://gizmodo.com/best-buy-has-the-anker-20000mah-power-bank-for-nearly-50-off-but-you-wont-find-the-deal-on-amazon-2000613484" target="_blank">Best Buy Has the Anker 20,000mAh Power Bank for Nearly 50% Off, but You Won’t Find the Deal on Amazon</a>
+        <span class="source-tag">gizmodo</span>
     </div>
-    <div class="summary">A new method for 2D vector rendering has been developed, making the process faster and easier for users.</div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Gadgets</span></div>
+    <div class="article-image">
+        <img src="https://gizmodo.com/app/uploads/2025/06/Anker-Power-Bank.jpg" alt="Best Buy Has the Anker 20,000mAh Power Bank for Nearly 50% Off, but You Won’t Find the Deal on Amazon" loading="lazy">
+    </div>
+    <div class="summary">Best Buy has discounted the Anker 20,000mAh power bank to $28, featuring dual charging ports and the ability to charge devices multiple times.</div>
     <div class="published">Published: June 10, 2025</div>
 </div>
+<div class="article" data-tags="technology tech news">
+    <div class="title">
+        <a href="https://www.theverge.com/games/684247/xbox-ally-x-hands-on-gears-of-war-reloaded" target="_blank">Xbox&#8217;s new handheld is a surprisingly comfortable way to play Gears</a>
+        <span class="source-tag">the_verge</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Tech News</span></div>
+    <div class="summary">The Xbox Ally X handheld, developed in partnership with Asus, is noted for its comfort during gameplay, positioning it as a competitor to the Steam Deck and Switch 2.</div>
+    <div class="published">Published: June 10, 2025</div>
 </div>
+<div class="article" data-tags="tech news discussion">
+    <div class="title">
+        <a href="https://www.youtube.com/watch?v=_sv8K190Zps" target="_blank">Faster, easier 2D vector rendering [video]</a>
+        <span class="source-tag">hn_official</span>
+    </div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Discussion</span></div>
+    <div class="summary">A new method for faster and easier 2D vector rendering has been developed, as demonstrated in a recent video.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology gadgets">
+    <div class="title">
+        <a href="https://www.engadget.com/social-media/threads-is-finally-getting-its-own-dm-inbox-160001216.html?src=rss" target="_blank">Threads is finally getting its own DM inbox</a>
+        <span class="source-tag">engadget</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">Gadgets</span></div>
+    <div class="article-image">
+        <img src="https://o.aolcdn.com/images/dims?image_uri=https%3A%2F%2Fs.yimg.com%2Fos%2Fcreatr-uploaded-images%2F2025-06%2F835bac10-4587-11f0-9dd4-6a604795681f&resize=1400%2C787&client=19f2b5e49a271b2bde77&signature=7bec01bdc7ff1d0c3e11956b58218a720488be14" alt="Threads is finally getting its own DM inbox" loading="lazy">
+    </div>
+    <div class="summary">Meta is testing a dedicated direct messaging inbox for Threads, starting in select countries, to address user demand for improved messaging capabilities.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="tech news business">
+    <div class="title">
+        <a href="https://venturebeat.com/ai/zip-debuts-50-ai-agents-to-kill-procurement-inefficiencies-openai-is-already-on-board/" target="_blank">Zip debuts 50 AI agents to kill procurement inefficiencies—OpenAI is already on board</a>
+        <span class="source-tag">venturebeat</span>
+    </div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Business</span></div>
+    <div class="summary">Zip has launched 50 AI agents designed to automate various procurement tasks, significantly improving efficiency in enterprise purchasing departments.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="technology in-depth">
+    <div class="title">
+        <a href="https://arstechnica.com/security/2025/06/meta-and-yandex-are-de-anonymizing-android-users-web-browsing-identifiers/" target="_blank">Meta and Yandex are de-anonymizing Android users’ web browsing identifiers</a>
+        <span class="source-tag">ars_technica</span>
+    </div>
+    <div class="tag-list"><span class="tag">Technology</span><span class="tag">In-depth</span></div>
+    <div class="article-image">
+        <img src="https://cdn.arstechnica.net/wp-content/uploads/2025/06/android-tracking-binoculars-1152x648.jpg" alt="Meta and Yandex are de-anonymizing Android users’ web browsing identifiers" loading="lazy">
+    </div>
+    <div class="summary">Researchers found that Meta and Yandex are de-anonymizing Android users by embedding tracking code that exploits legitimate Internet protocols to convert web identifiers into persistent mobile app identities.</div>
+    <div class="published">Published: June 03, 2025</div>
+</div>
+<div class="article" data-tags="tech news discussion">
+    <div class="title">
+        <a href="https://www.thehowlingfantods.com/dfw/dubious-math-in-infinite-jest.html" target="_blank">Dubious Math in Infinite Jest (2009)</a>
+        <span class="source-tag">hacker_news</span>
+    </div>
+    <div class="tag-list"><span class="tag">Tech News</span><span class="tag">Discussion</span></div>
+    <div class="summary">The article discusses mathematical errors found in David Foster Wallace's "Infinite Jest," noting that the number of errors is smaller than initially perceived.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="security alerts">
+    <div class="title">
+        <a href="https://www.cisa.gov/news-events/cybersecurity-advisories/aa25-093a" target="_blank">Fast Flux: A National Security Threat</a>
+        <span class="source-tag">us_cert</span>
+    </div>
+    <div class="tag-list"><span class="tag">Security</span><span class="tag">Alerts</span></div>
+    <div class="article-image">
+        <img src="https://www.cisa.gov/sites/default/files/styles/large/public/2025-04/Single%20flux%20technique.png?itok=pqu33cFW" alt="Fast Flux: A National Security Threat" loading="lazy">
+    </div>
+    <div class="summary">The use of "fast flux" techniques by malicious cyber actors poses a significant national security threat by allowing them to evade detection and maintain resilient command and control infrastructures.</div>
+    <div class="published">Published: April 01, 2025</div>
+</div>
+<div class="article" data-tags="physics science">
+    <div class="title">
+        <a href="https://phys.org/news/2025-06-animals-humans-languages-left.html" target="_blank">Animals can't talk like humans do—here's why the hunt for their languages has left us empty-handed</a>
+        <span class="source-tag">phys_org</span>
+    </div>
+    <div class="tag-list"><span class="tag">Physics</span><span class="tag">Science</span></div>
+    <div class="article-image">
+        <img src="https://scx1.b-cdn.net/csz/news/tmb/2024/bonobo.jpg" alt="Animals can't talk like humans do—here's why the hunt for their languages has left us empty-handed" loading="lazy">
+    </div>
+    <div class="summary">The search for animal languages has been largely unsuccessful because animals lack the complex linguistic structures that characterize human communication.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+<div class="article" data-tags="physics science">
+    <div class="title">
+        <a href="https://phys.org/news/2025-06-secret-koala-population-uncovered-fringe.html" target="_blank">Secret koala population uncovered on the fringe of a major city</a>
+        <span class="source-tag">phys_org</span>
+    </div>
+    <div class="tag-list"><span class="tag">Physics</span><span class="tag">Science</span></div>
+    <div class="article-image">
+        <img src="https://scx1.b-cdn.net/csz/news/tmb/2025/secret-koala-populatio.jpg" alt="Secret koala population uncovered on the fringe of a major city" loading="lazy">
+    </div>
+    <div class="summary">Researchers discovered a hidden population of 4,357 koalas on the outskirts of a major city in New South Wales through thermal drone surveys and statistical modeling.</div>
+    <div class="published">Published: June 10, 2025</div>
+</div>
+    </div>
+    
     <div class="footer">
-        Powered by AI • Updated Daily
+        Powered by AI • Updated Daily • Mixed & Filtered by Tags<br>
+        <small>Built with ❤️ for the curious mind</small>
     </div>
 </div>
+
+<script>
+// Theme toggle functionality
+function toggleTheme() {{
+    const body = document.body;
+    const themeToggle = document.querySelector('.theme-toggle');
+    const themeIcon = document.querySelector('.theme-icon');
+    const themeText = document.querySelector('.theme-text');
+    
+    if (body.dataset.theme === 'dark') {{
+        body.dataset.theme = 'light';
+        themeIcon.textContent = '☀️';
+        themeText.textContent = 'Light Mode';
+        localStorage.setItem('theme', 'light');
+    }} else {{
+        body.dataset.theme = 'dark';
+        themeIcon.textContent = '🌙';
+        themeText.textContent = 'Dark Mode';
+        localStorage.setItem('theme', 'dark');
+    }}
+}}
+
+// Load saved theme
+function loadTheme() {{
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    const body = document.body;
+    const themeIcon = document.querySelector('.theme-icon');
+    const themeText = document.querySelector('.theme-text');
+    
+    body.dataset.theme = savedTheme;
+    if (savedTheme === 'light') {{
+        themeIcon.textContent = '☀️';
+        themeText.textContent = 'Light Mode';
+    }} else {{
+        themeIcon.textContent = '🌙';
+        themeText.textContent = 'Dark Mode';
+    }}
+}}
+
+// Filter functionality
+function filterArticles(tag) {{
+    const articles = document.querySelectorAll('.article');
+    const buttons = document.querySelectorAll('.filter-btn');
+    
+    // Update button states
+    buttons.forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`[data-tag="${{tag}}"]`).classList.add('active');
+    
+    // Filter articles with animation
+    articles.forEach((article, index) => {{
+        if (tag === 'all') {{
+            setTimeout(() => {{
+                article.classList.remove('hidden');
+            }}, index * 50);
+        }} else {{
+            const articleTags = article.dataset.tags;
+            if (articleTags.includes(tag.toLowerCase())) {{
+                setTimeout(() => {{
+                    article.classList.remove('hidden');
+                }}, index * 50);
+            }} else {{
+                article.classList.add('hidden');
+            }}
+        }}
+    }});
+}}
+
+function clearFilters() {{
+    filterArticles('all');
+}}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {{
+    loadTheme();
+    
+    // Add click handlers for filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {{
+        btn.addEventListener('click', () => filterArticles(btn.dataset.tag));
+    }});
+    
+    // Add smooth scrolling for better UX
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {{
+        anchor.addEventListener('click', function (e) {{
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({{
+                behavior: 'smooth'
+            }});
+        }});
+    }});
+}});
+</script>
+
 </body>
 </html>
