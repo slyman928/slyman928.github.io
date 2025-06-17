@@ -1,113 +1,76 @@
-// Global visitor counter for GitHub Pages using api.visits.dev
-// Tracks real visitor counts across all users
+// Custom API-based visitor counter for GitHub Pages
+// Connects to your cousin's Node.js server
 
 class VisitorCounter {
     constructor() {
-        this.apiUrl = 'https://api.visits.dev';
-        this.siteId = 'slyman928-news-digest';
+        // Replace with your cousin's server URL
+        this.apiUrl = 'https://your-cousins-server.com/api/visits';
+        this.clientId = this.generateClientId();
         this.init();
+    }
+
+    generateClientId() {
+        // Generate a semi-persistent client ID
+        let clientId = localStorage.getItem('visit_client_id');
+        if (!clientId) {
+            clientId = 'client_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+            localStorage.setItem('visit_client_id', clientId);
+        }
+        return clientId;
     }
 
     async init() {
         try {
-            await this.incrementAndDisplay();
+            await this.handleVisit();
         } catch (error) {
             console.error('Counter error:', error);
-            this.displayFallback();
+            this.showFallback();
         }
     }
 
-    async incrementAndDisplay() {
-        // Check if user already visited today to avoid spam
+    async handleVisit() {
         const today = new Date().toISOString().split('T')[0];
-        const lastVisit = localStorage.getItem('last_visit_date');
+        const lastVisit = localStorage.getItem('last_api_visit_date');
         
         try {
             if (lastVisit !== today) {
                 // New visit today - increment counter
-                const response = await fetch(`${this.apiUrl}/hit/${this.siteId}`, {
+                const response = await fetch(this.apiUrl + '/increment', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                    }
+                    },
+                    body: JSON.stringify({
+                        clientId: this.clientId
+                    })
                 });
                 
                 if (response.ok) {
                     const data = await response.json();
-                    this.displayCount(data.visits || data.count || 1);
-                    localStorage.setItem('last_visit_date', today);
-                    console.log(`New visit recorded. Total: ${data.visits || data.count}`);
+                    this.displayCount(data.totalVisits);
+                    this.updateStatus('Global API counter • Thank you for visiting!');
+                    localStorage.setItem('last_api_visit_date', today);
+                    console.log(`New visit recorded: ${data.totalVisits}`);
                 } else {
                     throw new Error(`HTTP ${response.status}`);
                 }
             } else {
-                // Just get current count without incrementing
-                const response = await fetch(`${this.apiUrl}/get/${this.siteId}`);
+                // Just get current count
+                const response = await fetch(this.apiUrl);
                 
                 if (response.ok) {
                     const data = await response.json();
-                    this.displayCount(data.visits || data.count || 1);
-                    console.log(`Returning visitor. Total: ${data.visits || data.count}`);
+                    this.displayCount(data.totalVisits);
+                    this.updateStatus('Global API counter • Welcome back today!');
+                    console.log(`Current visits: ${data.totalVisits}`);
                 } else {
                     throw new Error(`HTTP ${response.status}`);
                 }
             }
         } catch (error) {
-            console.warn('Primary API failed, trying fallback method:', error);
-            this.tryFallbackCounter();
+            console.warn('API counter failed, using fallback:', error);
+            this.showFallback();
         }
-    }
-
-    async tryFallbackCounter() {
-        try {
-            // Fallback to a simple badge counter service
-            const response = await fetch(`https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://slyman928.github.io&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=visits&edge_flat=false`);
-            
-            if (response.ok) {
-                // Extract count from badge service (this is approximate)
-                const today = new Date().toISOString().split('T')[0];
-                const lastVisit = localStorage.getItem('last_visit_date');
-                
-                // Use a simple localStorage-based counter as final fallback
-                let count = parseInt(localStorage.getItem('site_visit_count') || '0');
-                
-                if (lastVisit !== today) {
-                    count++;
-                    localStorage.setItem('site_visit_count', count.toString());
-                    localStorage.setItem('last_visit_date', today);
-                }
-                
-                this.displayCount(count);
-                console.log(`Fallback counter: ${count}`);
-            } else {
-                throw new Error('Fallback also failed');
-            }
-        } catch (error) {
-            console.error('All counter methods failed:', error);
-            this.displayLocalCounter();
-        }
-    }
-
-    displayLocalCounter() {
-        // Final fallback - pure localStorage counter
-        const today = new Date().toISOString().split('T')[0];
-        const lastVisit = localStorage.getItem('last_visit_date');
-        let count = parseInt(localStorage.getItem('local_visit_count') || '47'); // Start with a reasonable number
-        
-        if (lastVisit !== today) {
-            count++;
-            localStorage.setItem('local_visit_count', count.toString());
-            localStorage.setItem('last_visit_date', today);
-        }
-        
-        this.displayCount(count);
-        
-        const statusElement = document.getElementById('counter-status');
-        if (statusElement) {
-            statusElement.textContent = 'Local counter • Global service unavailable';
-        }
-        
-        console.log(`Local counter: ${count}`);
     }
 
     displayCount(count) {
@@ -115,39 +78,30 @@ class VisitorCounter {
         if (counterElement) {
             this.animateCounter(counterElement, count);
         }
-        
-        // Update status text
-        const statusElement = document.getElementById('counter-status');
-        if (statusElement) {
-            const today = new Date().toISOString().split('T')[0];
-            const lastVisit = localStorage.getItem('last_visit_date');
-            const isNewVisit = lastVisit !== today;
-            
-            statusElement.textContent = isNewVisit ? 
-                'Global counter • Thank you for visiting!' : 
-                'Global counter • Welcome back today!';
-        }
     }
 
-    displayFallback() {
-        const counterElement = document.getElementById('visitor-counter');
-        if (counterElement) {
-            counterElement.textContent = 'Loading...';
+    showFallback() {
+        // Fallback to localStorage if API is unavailable
+        const today = new Date().toISOString().split('T')[0];
+        const lastVisit = localStorage.getItem('last_fallback_visit_date');
+        
+        let count = parseInt(localStorage.getItem('fallback_visit_count') || '234');
+        
+        if (lastVisit !== today) {
+            count++;
+            localStorage.setItem('fallback_visit_count', count.toString());
+            localStorage.setItem('last_fallback_visit_date', today);
         }
         
-        const statusElement = document.getElementById('counter-status');
-        if (statusElement) {
-            statusElement.textContent = 'Loading visitor count...';
-        }
-        
-        // Try local counter after a brief delay
-        setTimeout(() => {
-            this.displayLocalCounter();
-        }, 2000);
+        this.displayCount(count);
+        this.updateStatus('Local counter • API temporarily unavailable');
+        console.log(`Fallback counter: ${count}`);
     }
 
     animateCounter(element, targetCount) {
-        const duration = 1500; // 1.5 seconds
+        if (!element) return;
+        
+        const duration = 1500;
         const startCount = Math.max(0, targetCount - 20);
         const increment = (targetCount - startCount) / (duration / 50);
         let currentCount = startCount;
@@ -163,23 +117,68 @@ class VisitorCounter {
         }, 50);
     }
 
-    // Method to manually reset counter (for testing)
-    resetCounter() {
-        localStorage.removeItem('site_visit_count');
-        localStorage.removeItem('local_visit_count');
-        localStorage.removeItem('last_visit_date');
-        console.log('Counter reset');
+    updateStatus(statusText) {
+        const statusElement = document.getElementById('counter-status');
+        if (statusElement) {
+            statusElement.textContent = statusText;
+        }
+    }
+
+    // Method to get stats (for debugging)
+    async getStats() {
+        try {
+            const response = await fetch(this.apiUrl.replace('/visits', '/stats'));
+            if (response.ok) {
+                return await response.json();
+            }
+        } catch (error) {
+            console.error('Failed to get stats:', error);
+        }
+        return null;
+    }
+
+    // Debug method to reset counters
+    resetAllCounters() {
+        localStorage.removeItem('visit_client_id');
+        localStorage.removeItem('last_api_visit_date');
+        localStorage.removeItem('fallback_visit_count');
+        localStorage.removeItem('last_fallback_visit_date');
+        console.log('All counters reset');
         this.init();
     }
 }
 
-// Initialize counter when DOM is loaded
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    const counter = new VisitorCounter();
+    window.visitorCounter = counter;
+    console.log('API-based visitor counter initialized');
+});
+        localStorage.removeItem('simple_visit_count');
+        localStorage.removeItem('emergency_count');
+        localStorage.removeItem('last_visit_date');
+        console.log('All counters reset');
+        this.init();
+    }
+
+    // Get current stats for debugging
+    getStats() {
+        return {
+            github_visits: localStorage.getItem('github_local_visits'),
+            badge_visits: localStorage.getItem('badge_visit_count'),
+            simple_visits: localStorage.getItem('simple_visit_count'),
+            emergency_visits: localStorage.getItem('emergency_count'),
+            last_visit: localStorage.getItem('last_visit_date')
+        };
+    }
+}
+
+// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     const counter = new VisitorCounter();
     
-    // For debugging - expose counter to window
+    // Expose for debugging
     window.visitorCounter = counter;
     
-    // Add some visual feedback
-    console.log('Visitor counter initialized');
+    console.log('Visitor counter initialized with multiple fallbacks');
 });
