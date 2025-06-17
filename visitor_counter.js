@@ -3,8 +3,8 @@
 
 class VisitorCounter {
     constructor() {
-        // Replace with your cousin's server URL
-        this.apiUrl = 'http://173.64.4.70:3001/health';
+        // Fix: Remove /health from the base URL
+        this.apiUrl = 'http://173.64.4.70:3001/api/visits';
         this.clientId = this.generateClientId();
         this.init();
     }
