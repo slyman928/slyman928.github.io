@@ -4,7 +4,7 @@
 class VisitorCounter {
     constructor() {
         // Change to HTTPS if your cousin's server supports it
-        this.apiUrl = 'https://173.64.4.70:3001/api/visits';
+        this.apiUrl = 'http://173.64.4.70:3001/api/visits';
         this.clientId = this.generateClientId();
         this.init();
     }
