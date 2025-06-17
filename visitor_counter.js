@@ -4,7 +4,7 @@
 class VisitorCounter {
     constructor() {
         // Replace with your cousin's server URL
-        this.apiUrl = 'https://your-cousins-server.com/api/visits';
+        this.apiUrl = 'http://173.64.4.70:3001/health';
         this.clientId = this.generateClientId();
         this.init();
     }
@@ -153,32 +153,4 @@ document.addEventListener('DOMContentLoaded', function() {
     const counter = new VisitorCounter();
     window.visitorCounter = counter;
     console.log('API-based visitor counter initialized');
-});
-        localStorage.removeItem('simple_visit_count');
-        localStorage.removeItem('emergency_count');
-        localStorage.removeItem('last_visit_date');
-        console.log('All counters reset');
-        this.init();
-    }
-
-    // Get current stats for debugging
-    getStats() {
-        return {
-            github_visits: localStorage.getItem('github_local_visits'),
-            badge_visits: localStorage.getItem('badge_visit_count'),
-            simple_visits: localStorage.getItem('simple_visit_count'),
-            emergency_visits: localStorage.getItem('emergency_count'),
-            last_visit: localStorage.getItem('last_visit_date')
-        };
-    }
-}
-
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
-    const counter = new VisitorCounter();
-    
-    // Expose for debugging
-    window.visitorCounter = counter;
-    
-    console.log('Visitor counter initialized with multiple fallbacks');
 });
